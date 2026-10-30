@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ ROLES & USERS ============
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(50)
+  users     User[]
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("roles")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(150)
+  email      String   @unique @db.VarChar(150)
+  password   String   @db.VarChar(255)
+  roleId     Int      @map("role_id")
+  employeeId Int?     @unique @map("employee_id")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  role         Role          @relation(fields: [roleId], references: [id])
+  employee     Employee?     @relation(fields: [employeeId], references: [id])
+  activityLogs ActivityLog[]
+  loans        Loan[]        @relation("LoanCreator")
+
+  @@map("users")
+}
+
+model ActivityLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  action      String   @db.VarChar(50)
+  module      String   @db.VarChar(50)
+  referenceId Int?     @map("reference_id")
+  description String   @db.Text
+  ipAddress   String?  @map("ip_address") @db.VarChar(50)
+  userAgent   String?  @map("user_agent") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([module])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+// ============ MASTER DATA ============
+model Division {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  code      String   @unique @db.VarChar(10)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  assets Asset[]
+
+  @@map("divisions")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  code      String   @unique @db.VarChar(10)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  assets Asset[]
+
+  @@map("categories")
+}
+
+model Employee {
+  id         Int      @id @default(autoincrement())
+  nik        String   @unique @db.VarChar(30)
+  name       String   @db.VarChar(150)
+  department String?  @db.VarChar(100)
+  position   String?  @db.VarChar(100)
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user User?
+
+  @@map("employees")
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  building  String?  @db.VarChar(100)
+  floor     String?  @db.VarChar(50)
+  pic       String?  @db.VarChar(100)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  installedAssets InstalledAsset[]
+
+  @@map("locations")
+}
+
+// ============ ASSETS ============
+enum AssetStatus {
+  tersedia
+  dipinjam
+  terpasang
+  rusak
+  hilang
+  dilepas
+}
+
+enum AuctionStatus {
+  none
+  lelang
+  diambil
+}
+
+model Asset {
+  id            Int           @id @default(autoincrement())
+  code          String        @unique @db.VarChar(50)
+  name          String        @db.VarChar(150)
+  divisionId    Int           @map("division_id")
+  categoryId    Int           @map("category_id")
+  brand         String?       @db.VarChar(100)
+  serialNumber  String?       @map("serial_number") @db.VarChar(100)
+  price         Decimal?      @db.Decimal(15, 2)
+  budgetProject String?       @map("budget_project") @db.VarChar(150)
+  status        AssetStatus   @default(tersedia)
+  note          String?       @db.Text
+  disposedAt    DateTime?     @map("disposed_at")
+  disposedNote  String?       @map("disposed_note") @db.Text
+  legacyCode    String?       @map("legacy_code") @db.VarChar(50)
+  ownership     String?       @db.VarChar(50)
+  specs         String?       @db.Text
+  depreciation  Decimal?      @db.Decimal(15, 2)
+  quantity      Int           @default(1)
+  auctionStatus AuctionStatus @default(none) @map("auction_status")
+  auctionNote   String?       @map("auction_note") @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  division        Division         @relation(fields: [divisionId], references: [id])
+  category        Category         @relation(fields: [categoryId], references: [id])
+  purchases       Purchase[]
+  loanItems       LoanItem[]
+  damages         Damage[]
+  installedAssets InstalledAsset[]
+
+  @@index([divisionId])
+  @@index([categoryId])
+  @@index([status])
+  @@map("assets")
+}
+
+// ============ PURCHASES ============
+enum PurchaseSource {
+  purchase
+  grant
+}
+
+model Purchase {
+  id            Int            @id @default(autoincrement())
+  assetId       Int            @map("asset_id")
+  source        PurchaseSource
+  purchaseDate  DateTime       @map("purchase_date")
+  warrantyUntil DateTime?      @map("warranty_until")
+  price         Decimal?       @db.Decimal(15, 2)
+  budgetProject String?        @map("budget_project") @db.VarChar(150)
+  note          String?        @db.Text
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@map("purchases")
+}
+
+// ============ LOANS ============
+enum LoanStatus {
+  aktif
+  selesai
+}
+
+model Loan {
+  id           Int        @id @default(autoincrement())
+  code         String     @unique @db.VarChar(50)
+  borrowerName String     @map("borrower_name") @db.VarChar(150)
+  borrowerNik  String     @map("borrower_nik") @db.VarChar(30)
+  loanDate     DateTime   @map("loan_date")
+  dueDate      DateTime?  @map("due_date")
+  returnedAt   DateTime?  @map("returned_at")
+  status       LoanStatus @default(aktif)
+  templateId   Int?       @map("template_id")
+  createdBy    Int        @map("created_by")
+  note         String?    @db.Text
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  template    FormTemplate?    @relation(fields: [templateId], references: [id])
+  creator     User             @relation("LoanCreator", fields: [createdBy], references: [id])
+  items       LoanItem[]
+  attachments LoanAttachment[]
+
+  @@index([status])
+  @@index([createdBy])
+  @@map("loans")
+}
+
+model LoanItem {
+  id         Int       @id @default(autoincrement())
+  loanId     Int       @map("loan_id")
+  assetId    Int       @map("asset_id")
+  returnedAt DateTime? @map("returned_at")
+  condition  String?   @db.VarChar(100)
+
+  loan  Loan  @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  @@index([loanId])
+  @@index([assetId])
+  @@map("loan_items")
+}
+
+model LoanAttachment {
+  id        Int      @id @default(autoincrement())
+  loanId    Int      @map("loan_id")
+  filePath  String   @map("file_path") @db.VarChar(255)
+  fileName  String   @map("file_name") @db.VarChar(255)
+  mimeType  String   @map("mime_type") @db.VarChar(100)
+  fileSize  Int      @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  @@index([loanId])
+  @@map("loan_attachments")
+}
+
+// ============ DAMAGES ============
+enum DamageType {
+  hilang
+  rusak_pemakaian
+  rusak_hardware
+}
+
+model Damage {
+  id           Int        @id @default(autoincrement())
+  assetId      Int        @map("asset_id")
+  type         DamageType
+  damageDate   DateTime   @map("damage_date")
+  note         String?    @db.Text
+  reportedBy   Int        @map("reported_by")
+  resolvedAt   DateTime?  @map("resolved_at")
+  resolvedNote String?    @map("resolved_note") @db.Text
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  asset Asset @relation(fields: [assetId], references: [id])
+
+  @@index([assetId])
+  @@map("damages")
+}
+
+// ============ INSTALLED ASSETS ============
+model InstalledAsset {
+  id          Int      @id @default(autoincrement())
+  assetId     Int      @map("asset_id")
+  locationId  Int      @map("location_id")
+  installedAt DateTime @map("installed_at")
+  installedBy String   @map("installed_by") @db.VarChar(150)
+  note        String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  asset    Asset    @relation(fields: [assetId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@index([assetId])
+  @@index([locationId])
+  @@map("installed_assets")
+}
+
+// ============ FORM TEMPLATES ============
+model FormTemplate {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(150)
+  filePath  String   @map("file_path") @db.VarChar(255)
+  fileName  String   @map("file_name") @db.VarChar(255)
+  mimeType  String   @map("mime_type") @db.VarChar(100)
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  loans Loan[]
+
+  @@map("form_templates")
+}

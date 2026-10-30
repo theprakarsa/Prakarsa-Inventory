@@ -1,0 +1,235 @@
+legacy_code,name,category_code,ownership,price,quantity,depreciation,specs,note,auction_status,auction_note,status
+PRA/ELE/001/001/DCK/2019,AC Ruang Direktur,ELE,,3700000,1,,,,none,,tersedia
+PRA/ELE/001/002/-/-,AC Ruang Meeting,ELE,,,1,,,,none,,tersedia
+PRA/ELE/001/003/-/-,AC Ruang Meeting,ELE,,,1,,,,none,,tersedia
+PRA/ELE/001/004/DCK/2019,AC Perpustakaan,ELE,,3700000,1,,,,none,,tersedia
+PRA/ELE/001/005/DCK/2019,AC Ruang Finance,ELE,,3850000,1,,CS-YN9TKJ,,none,,tersedia
+PRA/ELE/001/006/-/-,AC Ruang Tengah Lantai 2,ELE,,,1,,CS-PN18RKP,,none,,tersedia
+PRA/ELE/001/007/-/-,AC Ruang Manager,ELE,,,1,,,,none,,tersedia
+PRA/ELE/001/008/DCK/2019,AC Ruang Staf,ELE,,3700000,1,,,,none,,tersedia
+PRA/ELE/001/009/DCK/2019,AC Ruang Staf,ELE,,4250000,1,,,,none,,tersedia
+PRA/ELE/002/001/-/-,Mesin Fax,ELE,,,1,,,,none,,tersedia
+PRA/ELE/003/001/-/-,TV Ruang Makan,ELE,,,1,,,,none,,tersedia
+PRA/ELE/004/001/DCK/2019,Kulkas Ruang Makan,ELE,,3150000,1,,,,none,,tersedia
+PRA/ELE/005/001/DCK/2019,Dispenser Ruang Makan,ELE,,2100000,1,,,,none,,tersedia
+PRA/ELE/005/002/DCK/2019,Dispenser Ruang Staf Lantai 2,ELE,,2100000,1,,,,none,,tersedia
+PRA/ELE/006/001/-/-,Microwave,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/001/-/-,Telepon Meja Receptionist,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/002/-/-,Telepon Meja Direktur,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/003/-/-,Telepon Meja Ruang Meeting,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/004/-/-,Telepon Ruang Finance,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/005/-/-,Telepon Ruang Finance,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/006/-/-,Telepon Ruang Finance,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/007/-/-,Telepon Ruang Manager,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/008/-/-,Telepon Ruang Manager,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/009/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/010/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/011/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/012/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/013/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/014/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/015/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/016/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/017/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/018/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/007/019/-/-,Telepon Ruang Staf,ELE,,,1,,,,none,,tersedia
+PRA/ELE/003/028/BUILD/2022,TV,ELE,BN,7500000,2,,Samsung Smart TV 50AU700 46 inc,,none,,tersedia
+PRA/ELE/003/029/BUILD/2022,TV,ELE,UB,10900000,1,,Samsung Smart TV 50AU700 55 inc,,none,,tersedia
+PRA/ELE/008/029/BUILD/2022,Mesin Pembuat Kopi,ELE,UB,8589180,1,,Getra CLT 006,,none,,tersedia
+PRA/FUR/001/001/DCK/2019,Kursi Receptionist,FUR,,699000,1,,,,none,,tersedia
+PRA/FUR/001/002/DCK/2019,Kursi Ruang Direktur (Headrest),FUR,,2500000,1,2500000,,,diambil,ADA DI LT 1 SUDAH DI AMBIL JP,tersedia
+PRA/FUR/001/003/DCK/2019,Kursi Ruang Direktur (hitam),FUR,,750000,1,750000,,,none,,tersedia
+PRA/FUR/001/004/DCK/2019,Kursi Ruang Direktur (hitam),FUR,,750000,1,750000,,,none,,tersedia
+PRA/FUR/001/005/DCK/2019,Kursi Ruang Direktur (hitam),FUR,,750000,1,750000,,,none,,tersedia
+PRA/FUR/001/006/DCK/2019,Kursi Ruang Direktur (hitam),FUR,,750000,1,750000,,,none,,tersedia
+PRA/FUR/001/007/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/008/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/009/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/010/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/011/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/012/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/013/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/014/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/015/DCK/2019,Kursi Ruang Meeting (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/016/-/-,Kursi Perpustakaan,FUR,,,1,699000,,,none,,tersedia
+PRA/FUR/001/017/-/-,Kursi Perpustakaan,FUR,,,1,699000,,,none,,tersedia
+PRA/FUR/001/018/-/-,Kursi Perpustakaan,FUR,,,1,699000,,,none,,tersedia
+PRA/FUR/001/019/-/-,Kursi Perpustakaan,FUR,,,1,699000,,,none,,tersedia
+PRA/FUR/001/020/-/-,Kursi Perpustakaan,FUR,,,1,699000,,,none,,tersedia
+PRA/FUR/001/021/DCK/2019,Kursi Ruang Finance (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/022/DCK/2019,Kursi Ruang Finance (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/023/DCK/2019,Kursi Ruang Finance (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/024/DCK/2019,Kursi Ruang Manager (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/025/DCK/2019,Kursi Ruang Manager (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/026/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/027/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/028/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/029/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/030/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/031/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/032/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/033/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/034/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/035/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/001/036/DCK/2019,Kursi Ruang Staf (hitam),FUR,,699000,1,699000,,,none,,tersedia
+PRA/FUR/002/037/DCK/2019,Kursi Bar,FUR,,750000,1,,,,none,,tersedia
+PRA/FUR/003/038/DCK/2019,Kursi Bar,FUR,,750000,1,,,,none,,tersedia
+PRA/FUR/004/039/DCK/2019,Kursi Bar,FUR,,750000,1,,,,none,,tersedia
+PRA/FUR/005/040/DCK/2019,Kursi Bar,FUR,,750000,1,,,,none,,tersedia
+PRA/FUR/002/001/DCK/2019,Meja Receptionist,FUR,,3700000,1,,,,lelang,ADA DI LT 1,tersedia
+PRA/FUR/002/002/-/-,Meja Ruang Direktur,FUR,,,1,,,,diambil,ADA DI LT 1 SUDAH DI AMBIL AW,tersedia
+PRA/FUR/002/003/-/-,Meja Ruang Meeting (bulat),FUR,,,1,,,,diambil,ADA DI LT 1 SUDAH DI AMBIL AW,tersedia
+PRA/FUR/002/004/-/-,Meja Perpustakaan,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/005/DCK/2019,Meja Bar,FUR,,3750000,1,,,,none,,tersedia
+PRA/FUR/002/006/DCK/2019,Meja Ruang Tamu LT 2,FUR,,1250000,1,1250000,,,lelang,ADA DI LT 2,tersedia
+PRA/FUR/002/007/DCK/2019,Meja Ruang Staf,FUR,,1250000,1,,,,none,,tersedia
+PRA/FUR/002/008/DCK/2019,Meja Ruang Finance,FUR,,1850000,1,1950000,,,none,,tersedia
+PRA/FUR/002/009/DCK/2019,Meja Ruang Finance,FUR,,1850000,1,,,,none,,tersedia
+PRA/FUR/002/010/DCK/2019,Meja Ruang Finance,FUR,,1850000,1,,,,none,,tersedia
+PRA/FUR/002/011/DCK/2019,Meja Ruang Manager,FUR,,1850000,1,,,,none,,tersedia
+PRA/FUR/002/012/DCK/2019,Meja Ruang Manager,FUR,,1850000,1,,,,none,,tersedia
+PRA/FUR/002/013/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/014/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/015/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/016/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/017/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/018/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/019/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/020/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/021/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/022/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/002/023/-/-,Meja Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/003/001/-/-,Lemari Ruang Meeting,FUR,,,1,,,,none,,tersedia
+PRA/FUR/003/002/-/-,Lemari Ruang Meeting,FUR,,,1,,,,none,,tersedia
+PRA/FUR/003/003/-/-,Lemari Ruang Direktur (Jati),FUR,,,1,,,,diambil,ADA DI LT 1 SUDAH DI AMBIL UB,tersedia
+PRA/FUR/003/004/DCK/2019,Lemari Ruang Finance,FUR,,2500000,1,,,,diambil,ADA DI RUANG TENGAH LT 2 SUDAH DI AMBIL HY,tersedia
+PRA/FUR/003/005/DCK/2019,Lemari Ruang Finance,FUR,,2500000,1,,,,lelang,ADA DI RUANG TENGAH LT 2,tersedia
+PRA/FUR/003/006/DCK/2019,Lemari Ruang Finance,FUR,,2500000,1,,,,none,ADA DI RUANG FINANCE,tersedia
+PRA/FUR/003/007/DCK/2019,Lemari Ruang Finance,FUR,,2000000,1,,,,none,,tersedia
+PRA/FUR/003/008/DCK/2019,Lemari Ruang Finance,FUR,,2000000,1,,,,none,,tersedia
+PRA/FUR/003/009/DCK/2019,Lemari Ruang Finance,FUR,,9744000,1,,,,none,,tersedia
+PRA/FUR/003/010/DCK/2019,Lemari Ruang Finance,FUR,,0,1,,,,none,,tersedia
+PRA/FUR/003/011/DCK/2019,Lemari Ruang Finance,FUR,,0,1,,,,none,,tersedia
+PRA/FUR/003/012/DCK/2019,Lemari Ruang Finance,FUR,,0,1,,,,none,,tersedia
+PRA/FUR/003/013/DCK/2019,Lemari Ruang Finance,FUR,,0,1,,,,none,,tersedia
+PRA/FUR/003/014/DCK/2019,Lemari Ruang Manager,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/015/DCK/2019,Lemari Ruang Manager,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/016/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/017/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/018/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/019/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/020/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/021/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/022/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/023/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/024/DCK/2019,Lemari Ruang Staf,FUR,,2500000,1,,,,none,,tersedia
+PRA/FUR/003/027/-/-,Lemari Kayu Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/004/001/-/-,Kabinet Mini Receptionist,FUR,,,1,,,,none,,tersedia
+PRA/FUR/004/002/-/-,Kabinet Mini Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/004/003/-/-,Kabinet Mini Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/004/004/-/-,Kabinet Mini Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/004/005/DCK/2019,Kabinet Letter L Dapur,FUR,,5700000,1,,,,none,,tersedia
+PRA/FUR/005/001/-/-,Rak Buku Ruang Meeting,FUR,,,1,,,,none,,tersedia
+PRA/FUR/005/002/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/003/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/004/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/005/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/006/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/007/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/008/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/009/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/010/DCK/2019,Rak Buku Perpustakaan,FUR,,4450000,1,,,,none,,tersedia
+PRA/FUR/005/011/-/-,Rak Buku Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/005/012/-/-,Rak Buku Ruang Staf,FUR,,,1,,,,none,,tersedia
+PRA/FUR/006/001/DCK/2019,Sofa Ruang Tamu,FUR,,2300000,1,,,,none,,tersedia
+PRA/FUR/006/002/DCK/2019,Sofa Ruang Makan,FUR,,4275000,1,,,,none,,tersedia
+PRA/FUR/006/003/DCK/2019,Sofa Ruang Staf,FUR,,1950000,1,1950000,,,lelang,2 SEATER,tersedia
+PRA/FUR/002/027/BUILD/2022,Meja Meeting,FUR,UB,10544000,1,,Enduro,,none,,tersedia
+PRA/KOM/001/001/-/-,Printer Ruang Perpustakaan,KOM,,,1,,,,none,,tersedia
+PRA/KOM/001/002/-/-,Printer Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/001/003/-/-,Printer Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/002/001/-/-,Printer Portable,KOM,,,1,,,,none,,tersedia
+PRA/KOM/002/002/-/-,Scanner Ruang Receptionist,KOM,,,1,,,,none,,tersedia
+PRA/KOM/002/003/-/-,Scanner Portable,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/001/-/-,CPU Receptionist,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/002/-/-,CPU Ruang Direktur,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/003/-/-,CPU Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/004/-/-,CPU Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/005/-/-,CPU Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/006/-/-,CPU Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/007/-/-,CPU Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/008/-/-,CPU Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/009/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/010/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/011/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/012/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/013/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/014/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/015/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/003/016/-/-,CPU Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/001/-/-,Monitor Receptionist,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/002/-/-,Monitor Ruang Direktur,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/003/-/-,Monitor Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/004/-/-,Monitor Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/005/-/-,Monitor Ruang Finance,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/006/-/-,Monitor Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/007/-/-,Monitor Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/008/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/009/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/010/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/011/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/012/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/013/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/014/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/004/015/-/-,Monitor Ruang Staf,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/001/DCK/2019,Laptop Macbook,KOM,AM,19800000,1,,,,none,,tersedia
+PRA/KOM/005/002/-/-,Laptop Finance Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/003/-/-,Laptop Program Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/004/DCK/2019,Laptop Dell,KOM,CNA,,1,,,,none,,tersedia
+PRA/KOM/005/005/-/-,Laptop Economic Policy Off.,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/006/BFDW/-,Laptop Social Policy Off.,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/007/FFA/2019,Laptop HP Spectre,KOM,AD,26500000,1,,,,none,,tersedia
+PRA/KOM/005/008/-/-,Laptop HR & Administration,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/009/DCK/2019,Laptop IT & Media Support,KOM,,16000000,1,,,,none,,tersedia
+PRA/KOM/006/001/-/-,UPS Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/006/002/-/-,UPS Ruang Manager,KOM,,,1,,,,none,,tersedia
+PRA/KOM/005/010/FFA/2020,Laptop Lenovo Yoga C740,KOM,DRN,18100000,1,,,,none,,tersedia
+PRA/KOM/005/011/FF/2020,Laptop HP Envy 13-AQ0044,KOM,HY,18750000,1,,,,none,,tersedia
+PRA/KOM/005/012/FF/2020,Laptop HP Envy 13-AQ0044,KOM,AS,18750000,1,,,,none,,tersedia
+PRA/KOM/005/013/BUILD/2022,Laptop Lenovo Yoga C740,KOM,HR,,1,,,,none,,tersedia
+PRA/KOM/005/014/BUILD/2022,Laptop Lenovo Yoga C740,KOM,AL,,1,,,,none,,tersedia
+PRA/KOM/003/015/BUILD/2022,Camera 360,KOM,BN,,1,,,,none,,tersedia
+PRA/KOM/005/016/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,FA,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/017/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,SH,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/018/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,AM,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/019/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,DP,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/020/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,PTN,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/021/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,VF,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/022/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,UB,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/023/BUILD/2022,Laptop Macbook Air MGNA3 M1,KOM,EA,19000000,1,,"Chip 8 CPU 8-Core GPU 16-Core 8GB RAM 512 SSD 13.3 1.2kg",,none,,tersedia
+PRA/KOM/005/024/BUILD/2022,Laptop Apple MacBook Pro MKGP3 M1,KOM,BN,29231818,1,,"Chip 8-Core CPU 8-Core GPU 16GB RAM 512 SSD 13 Retina Display",,none,,tersedia
+PRA/KOM/005/025/BUILD/2022,Laptop DELL XPS 13 9310 Core i7,KOM,HR,31954545,1,,"Core i7-1165G7 16GB RAM 512SSD WIN10 Pro + Office Home Student 2019 13.4 4K UHD Touchscreen 1.16kg",,none,,tersedia
+PRA/KOM/001/026/BUILD/2022,Printer Portable Epson WF-100,KOM,BN,3625029,1,,,,none,,tersedia
+PRA/MUL/001/001/-/-,Voice Recorder,MUL,,,1,,,,none,,tersedia
+PRA/MUL/001/002/-/-,Voice Recorder,MUL,,,1,,,,none,,tersedia
+PRA/MUL/001/003/-/-,Voice Recorder,MUL,,,1,,,,none,,tersedia
+PRA/MUL/001/004/-/-,Voice Recorder,MUL,,,1,,,,none,,tersedia
+PRA/MUL/002/001/-/-,Video Recorder,MUL,,,1,,,,none,,tersedia
+PRA/MUL/003/001/-/-,Kamera,MUL,,,1,,,,none,,tersedia
+PRA/MUL/004/001/-/-,Infocus,MUL,,,1,,,,none,,tersedia
+PRA/MUL/005/001/-/-,Pointer,MUL,,,1,,,,none,,tersedia
+PRA/MUL/006/001/-/-,Kabel HDMI,MUL,,,1,,,,none,,tersedia
+PRA/MUL/006/002/-/2019,Kabel HDMI,MUL,,,1,,,,none,,tersedia
+PRA/MUL/007/001/-/2019,Harddisk WD,MUL,BN,,1,,,,none,,tersedia
+PRA/MUL/007/002/IFF/2020,Harddisk Toshiba,MUL,HR,1213000,1,,,,none,,tersedia
+PRA/MUL/004/002/FFA/2020,Infocus Wireless BenQ,MUL,BN,6900000,1,,,,none,,tersedia
+PRA/MUL/006/003/BFDW/2021,Adapter Multiport,MUL,AS,,1,,,,none,,tersedia
+PRA/SOF/001/-/HIVOS/2019,Antivirus,SOF,-,278169,6,,,,none,,tersedia
+PRA/SOF/002/-/HIVOS/2019,Microsoft Office,SOF,-,843050,3,,,,none,,tersedia
+PRA/KEN/001/03/BUILD/2022,Kendaraan Mobil,KEN,,,1,,,,none,,tersedia
+PRA/ELE/006/005/OSF/2026,Laptop Dell Mobile Precision 3591,ELE,BD,34445000,1,,"Intel Core Ultra 7 165H vPro Enterprise 24 MB cache 16 cores 22 threads up to 5.0 GHz 45W 15.6 FHD 1920x1080 60Hz 250 nits Non-Touch FHD HDR IR Camera Mic WLAN Memory 16GB DDR5 512 GB Solid State Drive 6 Cell 97WHr Standard Battery Nvidia RTX A500 4GB Intel AX211 Wi-Fi 2x2 with Bluetooth Wireless Single Pointing Backlit Keyboard with Key Numeric Keypad Fingerprint Windows 11 Profesional 64Bit Backpack Colour Gray Weight 1.79kg",,none,,tersedia
+PRA/ELE/006/006/OSF/2026,Laptop Dell Latitude 3450,ELE,BAL,15527500,1,,"13th Gen Intel Core i5-1335U 12 MB cache 10 cores up to 4.60 GHz Turbo 14 FHD 1920 x 1080 Anti-Glare Non Touch Camera Microphone Memory 16GB DDR5 M.2 512GB PCIe Gen 4 NVMe Intel UHD Graphics Intel Wi-Fi 6E AX211 2x2 802.11ax Bluetooth Wireless Card 3-cell 54Wh Battery Express Charge Express Charge Boost capable Backlit Keyboard Fingerprint Windows 11 Profesional Colour Black Weight 1.52kg Dell Essential Briefcase",,none,,tersedia
+PRA/ELE/006/007/OSF/2026,Laptop Dell Latitude 3450,ELE,YPH,15527500,1,,"13th Gen Intel Core i5-1335U 12 MB cache 10 cores up to 4.60 GHz Turbo 14 FHD 1920 x 1080 Anti-Glare Non Touch Camera Microphone Memory 16GB DDR5 M.2 512GB PCIe Gen 4 NVMe Intel UHD Graphics Intel Wi-Fi 6E AX211 2x2 802.11ax Bluetooth Wireless Card 3-cell 54Wh Battery Express Charge Express Charge Boost capable Backlit Keyboard Fingerprint Windows 11 Profesional Colour Black Weight 1.52kg Dell Essential Briefcase",,none,,tersedia
+PRA/ELE/006/008/BUILD/2026,Laptop Asus Vivobook 14 A1404VA-VIPS7113M,ELE,RJS,11999000,1,,"Intel Core i7-1355U Intel Iris Xe Graphics Layar 14 IPS FHD RAM 16 GB 8GB DDR4 on board + 8GB DDR4 SO-DIMM FingerPrint Backlit KB SSD 1TB SSD Windos 11 Home + Office home 2021 2 Years Warranty",,none,,tersedia
+PRA/ELE/006/009/BUILD/2026,Laptop MacBook Air MBA 13 M4,ELE,RJS,15999999,1,,MacBook Air MBA 13 MDN/8C GPU/16GB/256GB M4,,none,,tersedia
+PRA/ELE/006/010/OSF/2026,Printer Epson L3251,ELE,,5798000,2,,,,none,,tersedia

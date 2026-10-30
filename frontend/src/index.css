@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f1f5f9; /* Abu-abu muda elegan untuk background utama */
+  color: #0f172a;
+}
+
+/* ===== CARD ===== */
+div.bg-white,
+div[class*="rounded-lg"][class*="border"] {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* ===== TABLE ===== */
+table thead {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+table thead th {
+  color: #64748b !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+table tbody tr {
+  transition: background-color 0.15s ease;
+}
+table tbody tr:hover {
+  background: #f8fafc !important;
+}
+
+/* ===== BUTTON PRIMARY ===== */
+button.bg-primary,
+button[class*="bg-primary"] {
+  background: #2563eb !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+button.bg-primary:hover,
+button[class*="bg-primary"]:hover {
+  background: #1d4ed8 !important;
+}
+
+/* ===== BADGE ===== */
+span[class*="bg-green"] { background: #dcfce7 !important; color: #166534 !important; }
+span[class*="bg-blue"] { background: #dbeafe !important; color: #1e40af !important; }
+span[class*="bg-red"] { background: #fee2e2 !important; color: #991b1b !important; }
+span[class*="bg-yellow"] { background: #fef3c7 !important; color: #92400e !important; }
+span[class*="bg-gray"] { background: #f1f5f9 !important; color: #475569 !important; }
+
+/* ===== INPUT ===== */
+input, select, textarea {
+  border-color: #cbd5e1 !important;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* ===== PRINT ===== */
+@media print {
+  @page { size: A4; margin: 1.5cm; }
+  body { background: white !important; }
+  .no-print, .no-print *, aside, header, nav { display: none !important; }
+  .print-area { display: block !important; }
+  main { padding: 0 !important; }
+  .print-area table { width: 100% !important; border-collapse: collapse !important; font-size: 9pt !important; }
+  .print-area table th, .print-area table td { border: 1px solid #ddd !important; padding: 6pt 8pt !important; }
+  .print-area span { background: none !important; color: #000 !important; padding: 0 !important; }
+}
