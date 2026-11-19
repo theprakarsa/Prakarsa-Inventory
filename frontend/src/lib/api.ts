@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-// Pastikan URL tidak berakhiran /api agar tidak dobel
-const rawBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const baseURL = rawBaseURL.replace(/\/api\/?$/, ''); // Hapus /api jika ada
+// Hardcode URL Railway, pastikan ada /api
+const baseURL = 'https://theprakarsa-inventory-production.up.railway.app/api';
 
 export const api = axios.create({
-  baseURL: `${baseURL}/api`, // Otomatis tambahkan /api
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
