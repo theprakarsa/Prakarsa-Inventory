@@ -1,4 +1,3 @@
-// Force Rebuild for 502 Fix
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import bcrypt from 'bcryptjs';
@@ -7,32 +6,23 @@ import { signToken } from '@/lib/jwt';
 import { success, error } from '@/lib/response';
 import { logActivity } from '@/lib/activity-log';
 
+const getCorsHeaders = (origin: string | null) => ({
+  "Access-Control-Allow-Origin": origin || "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Credentials": "true",
+});
+
 export async function OPTIONS(req: NextRequest) {
-  const origin = req.headers.get("origin") || "*";
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": origin,
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(req.headers.get("origin")) });
 }
 
 export async function POST(req: NextRequest) {
-  const origin = req.headers.get("origin") || "*";
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": "true",
-  };
-
+  const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   try {
     const { email, password } = await req.json();
     const user = await prisma.user.findUnique({ where: { email }, include: { role: true, employee: true } });
-
+    
     if (!user || !user.isActive || !(await bcrypt.compare(password, user.password))) {
       const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
       Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
