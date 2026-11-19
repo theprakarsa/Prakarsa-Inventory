@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
+import { api } from '@/lib/api-client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Package, ArrowLeftRight, AlertTriangle, Wrench } from 'lucide-react';
 
