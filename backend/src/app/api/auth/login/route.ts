@@ -3,25 +3,30 @@ import { NextRequest } from "next/server";
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/jwt';
-import { success, error } from '@/lib/response';
-import { logActivity } from '@/lib/activity-log';
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
-    const user = await prisma.user.findUnique({ where: { email }, include: { role: true, employee: true } });
+    const user = await prisma.user.findUnique({ where: { email }, include: { role: true } });
     
-    if (!user || !user.isActive || !(await bcrypt.compare(password, user.password))) {
-      return error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return NextResponse.json({ message: "Email atau password salah" }, { status: 401, headers: corsHeaders });
     }
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role.name });
-    await logActivity({ userId: user.id, action: 'login', module: 'auth', description: `Login oleh ${user.email}`, req });
     
-    return success({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role.name, employee: user.employee } }, 'Login berhasil');
-
+    return NextResponse.json({ token, user }, { status: 200, headers: corsHeaders });
   } catch (err: any) {
-    console.error(err);
-    return error('SERVER_ERROR', `Server Error: ${err.message || 'Unknown'}`, 500);
+    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
   }
 }
