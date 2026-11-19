@@ -30,3 +30,5 @@ backend/uploads/*
 # OS
 .DS_Store
 dist/
+node_modules/
+.env
