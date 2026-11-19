@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { signToken } from '@/lib/jwt';
+import { success, error } from '@/lib/response';
+import { logActivity } from '@/lib/activity-log';
 
 export async function OPTIONS(req: NextRequest) {
   const origin = req.headers.get("origin") || "*";
@@ -28,16 +30,24 @@ export async function POST(req: NextRequest) {
 
   try {
     const { email, password } = await req.json();
-    const user = await prisma.user.findUnique({ where: { email }, include: { role: true } });
-    
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return NextResponse.json({ message: "Email atau password salah" }, { status: 401, headers: corsHeaders });
+    const user = await prisma.user.findUnique({ where: { email }, include: { role: true, employee: true } });
+
+    if (!user || !user.isActive || !(await bcrypt.compare(password, user.password))) {
+      const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
+      Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
+      return errRes;
     }
 
     const token = signToken({ userId: user.id, email: user.email, role: user.role.name });
+    await logActivity({ userId: user.id, action: 'login', module: 'auth', description: `Login oleh ${user.email}`, req });
     
-    return NextResponse.json({ token, user }, { status: 200, headers: corsHeaders });
+    const successRes = success({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role.name, employee: user.employee } }, 'Login berhasil');
+    Object.entries(corsHeaders).forEach(([k, v]) => successRes.headers.set(k, v));
+    return successRes;
+
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500, headers: corsHeaders });
+    const errRes = error('SERVER_ERROR', `Server Error: ${err.message || 'Unknown'}`, 500);
+    Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
+    return errRes;
   }
 }
