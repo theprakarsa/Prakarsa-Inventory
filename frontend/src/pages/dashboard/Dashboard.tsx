@@ -6,7 +6,7 @@ import { Package, ArrowLeftRight, AlertTriangle, Wrench } from 'lucide-react';
 export function DashboardPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
-    queryFn: async () => (await api.get('/reports/dashboard')).data.data,
+    queryFn: async () => (await api.get('/api/reports/dashboard')).data.data,
     retry: 0,
   });
 

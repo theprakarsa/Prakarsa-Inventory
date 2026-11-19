@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     api
-      .get('/auth/me')
+      .get('/api/auth/me')
       .then((r) => setUser(r.data.data))
       .catch(() => localStorage.removeItem('token'))
       .finally(() => setLoading(false));
