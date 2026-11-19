@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ThePrakarsa Inventory
 
 Aplikasi web internal untuk mengelola siklus hidup asset organisasi.
@@ -12,3 +13,7 @@ Aplikasi web internal untuk mengelola siklus hidup asset organisasi.
 - `backend/` — API server (port 3000)
 - `frontend/` — SPA (port 5173)
 - `docs/` — dokumentasi
+=======
+# Prakarsa-Inventory
+Inventory-prakarsa (By Barkah)
+>>>>>>> a9799ce6a65e2d34ba5dc616c3fc359a35741154
