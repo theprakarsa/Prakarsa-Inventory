@@ -6,29 +6,48 @@ import { signToken } from '@/lib/jwt';
 import { success, error } from '@/lib/response';
 import { logActivity } from '@/lib/activity-log';
 
+const allowedOrigins = [
+  "https://prakarsa-inventory.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000"
+];
+
 const getCorsHeaders = (origin: string | null) => ({
-  "Access-Control-Allow-Origin": origin || "*",
+  "Access-Control-Allow-Origin": origin && allowedOrigins.includes(origin) ? origin : "https://prakarsa-inventory.vercel.app",
   "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Allow-Credentials": "true",
 });
 
 export async function OPTIONS(req: NextRequest) {
-  return new NextResponse(null, { status: 204, headers: getCorsHeaders(req.headers.get("origin")) });
+  const origin = req.headers.get("origin");
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
 }
 
 export async function POST(req: NextRequest) {
-  const corsHeaders = getCorsHeaders(req.headers.get("origin"));
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   try {
     const { email, password } = await req.json();
     const user = await prisma.user.findUnique({ where: { email }, include: { role: true, employee: true } });
-    if (!user || !user.isActive || !(await bcrypt.compare(password, user.password))) {
+    
+    if (!user || !user.isActive) {
       const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
       Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
       return errRes;
     }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
+      Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
+      return errRes;
+    }
+
     const token = signToken({ userId: user.id, email: user.email, role: user.role.name });
     await logActivity({ userId: user.id, action: 'login', module: 'auth', description: `Login oleh ${user.email}`, req });
+    
     const successRes = success({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role.name, employee: user.employee } }, 'Login berhasil');
     Object.entries(corsHeaders).forEach(([k, v]) => successRes.headers.set(k, v));
     return successRes;
