@@ -6,18 +6,22 @@ import { signToken } from '@/lib/jwt';
 import { success, error } from '@/lib/response';
 import { logActivity } from '@/lib/activity-log';
 
-const allowedOrigins = [
-  "https://prakarsa-inventory.vercel.app",
-  "http://localhost:5173",
-  "http://localhost:3000"
-];
+// Izinkan localhost dan semua domain yang berakhiran .vercel.app
+const isAllowedOrigin = (origin: string) => {
+  return origin === "http://localhost:5173" || 
+         origin === "http://localhost:3000" ||
+         /^https:\/\/.*\.vercel\.app$/.test(origin);
+};
 
-const getCorsHeaders = (origin: string | null) => ({
-  "Access-Control-Allow-Origin": origin && allowedOrigins.includes(origin) ? origin : "https://prakarsa-inventory.vercel.app",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Credentials": "true",
-});
+const getCorsHeaders = (origin: string | null) => {
+  const allowOrigin = origin && isAllowedOrigin(origin) ? origin : "*";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
+  };
+};
 
 export async function OPTIONS(req: NextRequest) {
   const origin = req.headers.get("origin");
