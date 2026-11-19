@@ -17,14 +17,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency } from '@/lib/utils';
 import { Plus, Printer, Trash2, Eye } from 'lucide-react';
 
 const createSchema = z.object({
   name: z.string().min(1, 'Nama wajib'),
   divisionId: z.coerce.number().int().positive('Pilih divisi'),
   categoryId: z.coerce.number().int().positive('Pilih kategori'),
-  legacyCode: z.string().optional(),
   ownership: z.string().optional(),
   brand: z.string().optional(),
   serialNumber: z.string().optional(),
@@ -120,15 +118,11 @@ export function AssetsPage() {
                 <DialogTitle>Tambah Asset</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit((d) => createMut.mutate(d))} className="space-y-3">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   <div>
-                    <Label>Nama</Label>
-                    <Input {...register('name')} />
+                    <Label>Nama Barang</Label>
+                    <Input {...register('name')} placeholder="Contoh: Laptop Asus" />
                     {errors.name && <p className="text-xs text-red-600">{errors.name.message}</p>}
-                  </div>
-                  <div>
-                    <Label>Legacy Code (opsional)</Label>
-                    <Input {...register('legacyCode')} placeholder="PRA/ELE/001/001/DCK/2019" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -195,7 +189,7 @@ export function AssetsPage() {
 
       <div className="mb-3 flex gap-2 flex-wrap">
         <Input
-          placeholder="Cari kode / nama / serial / legacy..."
+          placeholder="Cari kode / nama / serial..."
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="max-w-sm"
@@ -225,19 +219,18 @@ export function AssetsPage() {
         <Table>
           <Thead>
             <Tr>
-              <Th>Kode</Th><Th>Legacy</Th><Th>Nama</Th><Th>Kategori</Th>
+              <Th>Kode</Th><Th>Nama</Th><Th>Kategori</Th>
               <Th>Ownership</Th><Th>Status</Th><Th>Qty</Th><Th>Aksi</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {isLoading && <Tr><Td colSpan={8} className="text-center py-6">Loading...</Td></Tr>}
+            {isLoading && <Tr><Td colSpan={7} className="text-center py-6">Loading...</Td></Tr>}
             {!isLoading && rows.length === 0 && (
-              <Tr><Td colSpan={8} className="text-center py-6 text-gray-500">Belum ada asset</Td></Tr>
+              <Tr><Td colSpan={7} className="text-center py-6 text-gray-500">Belum ada asset</Td></Tr>
             )}
             {rows.map((a: any) => (
               <Tr key={a.id}>
                 <Td className="font-mono text-xs">{a.code}</Td>
-                <Td className="font-mono text-xs text-gray-500">{a.legacyCode ?? '-'}</Td>
                 <Td>{a.name}</Td>
                 <Td>{a.category?.name}</Td>
                 <Td>{a.ownership ?? '-'}</Td>
@@ -248,9 +241,13 @@ export function AssetsPage() {
                     <Link to={`/assets/${a.id}`}>
                       <Button size="sm" variant="outline" title="Detail"><Eye size={12} /></Button>
                     </Link>
-                    <Button size="sm" variant="outline" onClick={() => printLabel(a.id)} title="Print Label">
-                      <Printer size={12} />
-                    </Button>
+                    
+                    {isAdmin && (
+                      <Button size="sm" variant="outline" onClick={() => printLabel(a.id)} title="Print Label">
+                        <Printer size={12} />
+                      </Button>
+                    )}
+
                     {isAdmin && (
                       <Button size="sm" variant="destructive" onClick={() => {
                         if (confirm(`Hapus asset ${a.code}?`)) deleteMut.mutate(a.id);

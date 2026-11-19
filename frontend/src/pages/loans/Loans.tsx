@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { formatDate } from '@/lib/utils';
-import { Plus, Upload, RotateCcw, Trash2 } from 'lucide-react';
+import { Plus, Upload, RotateCcw, Trash2, Download, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const schema = z.object({
@@ -37,6 +37,9 @@ export function LoansPage() {
   const [open, setOpen] = useState(false);
   const [uploadFor, setUploadFor] = useState<any>(null);
   const [selectedAssets, setSelectedAssets] = useState<number[]>([]);
+  
+  // State untuk fitur pencarian barang di dalam form
+  const [searchAsset, setSearchAsset] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['loans', page, status],
@@ -53,7 +56,7 @@ export function LoansPage() {
     queryFn: async () => (await api.get('/templates', { params: { limit: 100 } })).data.data,
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -67,6 +70,7 @@ export function LoansPage() {
       setOpen(false);
       reset();
       setSelectedAssets([]);
+      setSearchAsset(''); // Reset pencarian saat form ditutup
     },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal'),
   });
@@ -113,6 +117,42 @@ export function LoansPage() {
     );
   }
 
+  function handleDownloadTemplate() {
+    const selectedId = watch('templateId');
+    
+    if (!templates || templates.length === 0) {
+      toast.error('Belum ada template yang tersedia. Hubungi Admin.');
+      return;
+    }
+
+    let idToDownload: number;
+
+    if (selectedId) {
+      idToDownload = Number(selectedId);
+    } else {
+      const defaultTemplate: any = templates.find((t: any) => t.isDefault);
+      idToDownload = defaultTemplate ? Number(defaultTemplate.id) : Number(templates[0].id);
+    }
+
+    if (!idToDownload || isNaN(idToDownload)) {
+      toast.error('Template tidak valid.');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    window.open(`${import.meta.env.VITE_API_URL}/templates/${idToDownload}/download?token=${token}`, '_blank');
+  }
+
+  // Logika untuk memfilter barang berdasarkan ketikan pengguna
+  const filteredAssets = availableAssets?.filter((a: any) => {
+    const keyword = searchAsset.toLowerCase();
+    return (
+      a.name.toLowerCase().includes(keyword) || 
+      a.code.toLowerCase().includes(keyword) ||
+      (a.legacyCode && a.legacyCode.toLowerCase().includes(keyword))
+    );
+  });
+
   const meta = data?.meta;
   const rows = data?.data ?? [];
 
@@ -120,7 +160,13 @@ export function LoansPage() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Peminjaman</h1>
-        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSelectedAssets([]); }}>
+        <Dialog open={open} onOpenChange={(v) => { 
+          setOpen(v); 
+          if (!v) {
+            setSelectedAssets([]);
+            setSearchAsset('');
+          } 
+        }}>
           <DialogTrigger asChild>
             <Button><Plus size={16} className="mr-1" /> Buat Peminjaman</Button>
           </DialogTrigger>
@@ -149,22 +195,45 @@ export function LoansPage() {
                   <Input type="date" {...register('dueDate')} />
                 </div>
               </div>
+              
               <div>
                 <Label>Template Form</Label>
-                <Select {...register('templateId')}>
-                  <option value="">-- Pilih template (opsional) --</option>
-                  {templates?.map((t: any) => (
-                    <option key={t.id} value={t.id}>{t.name}{t.isDefault ? ' (default)' : ''}</option>
-                  ))}
-                </Select>
+                <div className="flex gap-2">
+                  <Select {...register('templateId')} className="flex-1">
+                    <option value="">-- Pilih template (opsional) --</option>
+                    {templates?.map((t: any) => (
+                      <option key={t.id} value={t.id}>{t.name}{t.isDefault ? ' (default)' : ''}</option>
+                    ))}
+                  </Select>
+                  <Button type="button" variant="outline" onClick={handleDownloadTemplate}>
+                    <Download size={16} className="mr-2" /> Unduh Form
+                  </Button>
+                </div>
               </div>
+
               <div>
                 <Label>Pilih Asset (multi)</Label>
+                {/* KOLOM PENCARIAN BARANG */}
+                <div className="mb-2 relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                    <Search size={14} />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Cari nama atau kode barang..."
+                    className="pl-9"
+                    value={searchAsset}
+                    onChange={(e) => setSearchAsset(e.target.value)}
+                  />
+                </div>
+
                 <div className="border rounded-md max-h-40 overflow-y-auto p-2 space-y-1">
-                  {!availableAssets || availableAssets.length === 0 ? (
-                    <p className="text-xs text-gray-500">Tidak ada asset tersedia</p>
+                  {!filteredAssets || filteredAssets.length === 0 ? (
+                    <p className="text-xs text-gray-500 text-center py-2">
+                      {searchAsset ? 'Barang tidak ditemukan' : 'Tidak ada asset tersedia'}
+                    </p>
                   ) : (
-                    availableAssets.map((a: any) => (
+                    filteredAssets.map((a: any) => (
                       <label key={a.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 px-1 py-0.5 rounded">
                         <input
                           type="checkbox"

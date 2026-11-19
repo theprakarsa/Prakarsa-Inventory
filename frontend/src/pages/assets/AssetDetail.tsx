@@ -50,9 +50,15 @@ export function AssetDetailPage() {
           <h1 className="text-2xl font-semibold">Detail Asset</h1>
         </div>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={printLabel}>
-            <Printer size={14} className="mr-1" /> Cetak Label
-          </Button>
+          
+          {/* Tombol Cetak Label HANYA muncul untuk Admin */}
+          {isAdmin && (
+            <Button size="sm" variant="outline" onClick={printLabel}>
+              <Printer size={14} className="mr-1" /> Cetak Label
+            </Button>
+          )}
+
+          {/* Tombol Hapus HANYA muncul untuk Admin */}
           {isAdmin && (
             <Button size="sm" variant="destructive" onClick={() => {
               if (confirm(`Hapus asset ${data.code}?`)) deleteMut.mutate();

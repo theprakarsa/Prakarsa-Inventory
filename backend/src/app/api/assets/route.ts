@@ -12,10 +12,12 @@ const createSchema = z.object({
   name: z.string().min(1),
   divisionId: z.coerce.number().int().positive(),
   categoryId: z.coerce.number().int().positive(),
+  ownership: z.string().optional(),
   brand: z.string().optional(),
   serialNumber: z.string().optional(),
   price: z.coerce.number().nonnegative().optional(),
   budgetProject: z.string().optional(),
+  quantity: z.coerce.number().int().positive().default(1),
   note: z.string().optional(),
 });
 
@@ -75,6 +77,7 @@ export async function POST(req: NextRequest) {
   if (!division) return error('NOT_FOUND', 'Divisi tidak ditemukan', 404);
   if (!category) return error('NOT_FOUND', 'Kategori tidak ditemukan', 404);
 
+  // KODE OTOMATIS DIBUAT DI SINI
   const code = await generateAssetCode(division.code, category.code);
 
   const asset = await prisma.asset.create({
@@ -83,10 +86,12 @@ export async function POST(req: NextRequest) {
       name: v.data.name,
       divisionId: v.data.divisionId,
       categoryId: v.data.categoryId,
+      ownership: v.data.ownership,
       brand: v.data.brand,
       serialNumber: v.data.serialNumber,
       price: v.data.price,
       budgetProject: v.data.budgetProject,
+      quantity: v.data.quantity,
       note: v.data.note,
       status: 'tersedia',
     },

@@ -55,27 +55,42 @@ export async function POST(req: NextRequest) {
   const asset = await prisma.asset.findUnique({ where: { id: v.data.assetId } });
   if (!asset) return error('NOT_FOUND', 'Asset tidak ditemukan', 404);
 
-  const created = await prisma.purchase.create({
-    data: {
-      assetId: v.data.assetId,
-      source: v.data.source,
-      purchaseDate: new Date(v.data.purchaseDate),
-      warrantyUntil: v.data.warrantyUntil ? new Date(v.data.warrantyUntil) : null,
-      price: v.data.price,
-      budgetProject: v.data.budgetProject,
-      note: v.data.note,
-    },
-    include: { asset: true },
+  // Gunakan transaksi agar data pembelian dan update harga asset berjalan bersamaan
+  const result = await prisma.$transaction(async (tx) => {
+    // 1. Catat pembelian
+    const purchase = await tx.purchase.create({
+      data: {
+        assetId: v.data.assetId,
+        source: v.data.source,
+        purchaseDate: new Date(v.data.purchaseDate),
+        warrantyUntil: v.data.warrantyUntil ? new Date(v.data.warrantyUntil) : null,
+        price: v.data.price,
+        budgetProject: v.data.budgetProject,
+        note: v.data.note,
+      },
+      include: { asset: true },
+    });
+
+    // 2. OTOMATIS UPDATE HARGA DI MASTER ASSET
+    // Jika user mengisi harga, timpa harga lama di tabel asset
+    if (v.data.price !== undefined && v.data.price !== null) {
+      await tx.asset.update({
+        where: { id: v.data.assetId },
+        data: { price: v.data.price },
+      });
+    }
+
+    return purchase;
   });
 
   await logActivity({
     userId: auth.user.userId,
     action: 'create',
     module: 'purchases',
-    referenceId: created.id,
-    description: `Catat perolehan ${created.source} untuk ${asset.code}`,
+    referenceId: result.id,
+    description: `Catat perolehan ${result.source} untuk ${asset.code}`,
     req,
   });
 
-  return success(created, 'Perolehan dicatat');
+  return success(result, 'Perolehan dicatat & Harga aset diperbarui');
 }
