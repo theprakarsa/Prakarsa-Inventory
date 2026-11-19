@@ -6,92 +6,35 @@ import { signToken } from '@/lib/jwt';
 import { success, error } from '@/lib/response';
 import { logActivity } from '@/lib/activity-log';
 
-const isAllowedOrigin = (origin: string | null) => {
-  if (!origin) return false;
-  return origin === "http://localhost:5173" || 
-         origin === "http://localhost:3000" ||
-         /^https:\/\/.*\.vercel\.app$/.test(origin);
-};
-
 const getCorsHeaders = (origin: string | null) => ({
-  "Access-Control-Allow-Origin": origin && isAllowedOrigin(origin) ? origin : "*",
+  "Access-Control-Allow-Origin": origin || "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Allow-Credentials": "true",
 });
 
 export async function OPTIONS(req: NextRequest) {
-  const origin = req.headers.get("origin");
-  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(req.headers.get("origin")) });
 }
 
 export async function POST(req: NextRequest) {
-  const origin = req.headers.get("origin");
-  const corsHeaders = getCorsHeaders(origin);
-
+  const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   try {
-    const body = await req.json();
-    const { email, password } = body;
-
-    if (!email || !password) {
-      const errRes = error('BAD_REQUEST', 'Email dan password harus diisi', 400);
-      Object.entries(corsHeaders).forEach(([key, value]) => errRes.headers.set(key, value));
-      return errRes;
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { role: true, employee: true },
-    });
-
-    if (!user || !user.isActive) {
+    const { email, password } = await req.json();
+    const user = await prisma.user.findUnique({ where: { email }, include: { role: true, employee: true } });
+    if (!user || !user.isActive || !(await bcrypt.compare(password, user.password))) {
       const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
-      Object.entries(corsHeaders).forEach(([key, value]) => errRes.headers.set(key, value));
+      Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
       return errRes;
     }
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      const errRes = error('INVALID_CREDENTIALS', 'Email atau password salah', 401);
-      Object.entries(corsHeaders).forEach(([key, value]) => errRes.headers.set(key, value));
-      return errRes;
-    }
-
-    const token = signToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role.name,
-    });
-
-    await logActivity({
-      userId: user.id,
-      action: 'login',
-      module: 'auth',
-      description: `Login oleh ${user.email}`,
-      req,
-    });
-
-    const successRes = success(
-      {
-        token,
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role.name,
-          employee: user.employee,
-        },
-      },
-      'Login berhasil'
-    );
-
-    Object.entries(corsHeaders).forEach(([key, value]) => successRes.headers.set(key, value));
+    const token = signToken({ userId: user.id, email: user.email, role: user.role.name });
+    await logActivity({ userId: user.id, action: 'login', module: 'auth', description: `Login oleh ${user.email}`, req });
+    const successRes = success({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role.name, employee: user.employee } }, 'Login berhasil');
+    Object.entries(corsHeaders).forEach(([k, v]) => successRes.headers.set(k, v));
     return successRes;
-
   } catch (err: any) {
-    console.error("LOGIN ERROR:", err.message || err);
     const errRes = error('SERVER_ERROR', `Server Error: ${err.message || 'Unknown'}`, 500);
-    Object.entries(corsHeaders).forEach(([key, value]) => errRes.headers.set(key, value));
+    Object.entries(corsHeaders).forEach(([k, v]) => errRes.headers.set(k, v));
     return errRes;
   }
 }
