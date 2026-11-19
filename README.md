@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ThePrakarsa Inventory
 
 Aplikasi web internal untuk mengelola siklus hidup asset organisasi.
