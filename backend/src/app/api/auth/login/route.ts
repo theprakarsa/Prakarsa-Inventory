@@ -7,17 +7,23 @@ import { success, error } from '@/lib/response';
 import { logActivity } from '@/lib/activity-log';
 import { validateBody } from '@/lib/validate';
 
-// 1. Definisi Header CORS
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://prakarsa-inventory.vercel.app",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+const allowedOrigins = [
+  "https://prakarsa-inventory.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000"
+];
+
+// Fungsi helper untuk header CORS
+const getCorsHeaders = (origin: string | null) => ({
+  "Access-Control-Allow-Origin": origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Allow-Credentials": "true",
-};
+});
 
-// 2. Handler untuk Preflight Request (OPTIONS)
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: corsHeaders });
+export async function OPTIONS(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(origin) });
 }
 
 const loginSchema = z.object({
@@ -25,19 +31,19 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-// 3. Handler untuk Login (POST)
 export async function POST(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   try {
     const v = await validateBody(req, loginSchema);
     if (!v.ok) {
-      // Pastikan response error dari validasi juga punya header CORS
       const errRes = v.response;
       Object.entries(corsHeaders).forEach(([key, value]) => errRes.headers.set(key, value));
       return errRes;
     }
 
     const { email, password } = v.data;
-
     const user = await prisma.user.findUnique({
       where: { email },
       include: { role: true, employee: true },
@@ -84,7 +90,6 @@ export async function POST(req: NextRequest) {
       'Login berhasil'
     );
 
-    // Tambahkan header CORS ke response sukses
     Object.entries(corsHeaders).forEach(([key, value]) => successRes.headers.set(key, value));
     return successRes;
 
