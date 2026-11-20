@@ -18,12 +18,12 @@ export function AssetDetailPage() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['asset', id],
-    queryFn: async () => (await api.get(`/assets/${id}`)).data.data,
+    queryFn: async () => (await api.get(`/api/assets/${id}`)).data.data,
     enabled: !!id,
   });
 
   const deleteMut = useMutation({
-    mutationFn: () => api.delete(`/assets/${id}`),
+    mutationFn: () => api.delete(`/api/assets/${id}`),
     onSuccess: () => {
       toast.success('Asset dihapus');
       qc.invalidateQueries({ queryKey: ['assets'] });
@@ -37,7 +37,7 @@ export function AssetDetailPage() {
 
   function printLabel() {
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/assets/${id}/label?token=${token}`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL}/api/assets/${id}/label?token=${token}`, '_blank');
   }
 
   return (

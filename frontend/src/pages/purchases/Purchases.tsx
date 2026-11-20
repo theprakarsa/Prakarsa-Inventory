@@ -36,11 +36,11 @@ export function PurchasesPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['purchases', page],
-    queryFn: async () => (await api.get('/purchases', { params: { page, limit: 10 } })).data,
+    queryFn: async () => (await api.get('/api/purchases', { params: { page, limit: 10 } })).data,
   });
   const { data: assets } = useQuery({
     queryKey: ['assets-all'],
-    queryFn: async () => (await api.get('/assets', { params: { limit: 500 } })).data.data,
+    queryFn: async () => (await api.get('/api/assets', { params: { limit: 500 } })).data.data,
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -48,7 +48,7 @@ export function PurchasesPage() {
   });
 
   const createMut = useMutation({
-    mutationFn: (p: FormData) => api.post('/purchases', p),
+    mutationFn: (p: FormData) => api.post('/api/purchases', p),
     onSuccess: () => {
       toast.success('Perolehan dicatat');
       qc.invalidateQueries({ queryKey: ['purchases'] });

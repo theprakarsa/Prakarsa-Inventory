@@ -34,11 +34,11 @@ export function UsersPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: async () => (await api.get('/users', { params: { limit: 200 } })).data.data as any[],
+    queryFn: async () => (await api.get('/api/users', { params: { limit: 200 } })).data.data as any[],
   });
   const { data: employees } = useQuery({
     queryKey: ['employees-all'],
-    queryFn: async () => (await api.get('/employees', { params: { limit: 300 } })).data.data,
+    queryFn: async () => (await api.get('/api/employees', { params: { limit: 300 } })).data.data,
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -54,7 +54,7 @@ export function UsersPage() {
         employeeId: p.employeeId ? Number(p.employeeId) : null,
       };
       if (p.password) payload.password = p.password;
-      return editing ? api.put(`/users/${editing.id}`, payload) : api.post('/users', payload);
+      return editing ? api.put(`/api/users/${editing.id}`, payload) : api.post('/api/users', payload);
     },
     onSuccess: () => {
       toast.success('User disimpan');
@@ -77,7 +77,7 @@ export function UsersPage() {
 
   const resetMut = useMutation({
     mutationFn: ({ id, password }: { id: number; password: string }) =>
-      api.post(`/users/${id}/reset-password`, { password }),
+      api.post(`/api/users/${id}/reset-password`, { password }),
     onSuccess: () => {
       toast.success('Password direset');
       setResetFor(null);

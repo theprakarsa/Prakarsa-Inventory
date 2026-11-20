@@ -23,7 +23,7 @@ export function ReportsPage() {
   const { data } = useQuery({
     queryKey: ['report', tab, page, from, to, status],
     queryFn: async () =>
-      (await api.get(`/reports/${tab}`, { params: { page, limit: 100, from, to, status } })).data,
+      (await api.get(`/api/reports/${tab}`, { params: { page, limit: 100, from, to, status } })).data,
   });
 
   const meta = data?.meta;

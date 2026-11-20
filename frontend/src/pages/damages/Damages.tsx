@@ -33,11 +33,11 @@ export function DamagesPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['damages', page],
-    queryFn: async () => (await api.get('/damages', { params: { page, limit: 10 } })).data,
+    queryFn: async () => (await api.get('/api/damages', { params: { page, limit: 10 } })).data,
   });
   const { data: assets } = useQuery({
     queryKey: ['assets-all'],
-    queryFn: async () => (await api.get('/assets', { params: { limit: 500 } })).data.data,
+    queryFn: async () => (await api.get('/api/assets', { params: { limit: 500 } })).data.data,
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -45,7 +45,7 @@ export function DamagesPage() {
   });
 
   const createMut = useMutation({
-    mutationFn: (p: FormData) => api.post('/damages', p),
+    mutationFn: (p: FormData) => api.post('/api/damages', p),
     onSuccess: () => {
       toast.success('Laporan kerusakan dibuat');
       qc.invalidateQueries({ queryKey: ['damages'] });

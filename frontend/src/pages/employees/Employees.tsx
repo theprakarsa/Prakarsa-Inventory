@@ -32,7 +32,7 @@ export function EmployeesPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['employees'],
     queryFn: async () =>
-      (await api.get('/employees', { params: { limit: 300 } })).data.data as any[],
+      (await api.get('/api/employees', { params: { limit: 300 } })).data.data as any[],
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -42,7 +42,7 @@ export function EmployeesPage() {
 
   const saveMut = useMutation({
     mutationFn: (p: FormData) =>
-      editing ? api.put(`/employees/${editing.id}`, p) : api.post('/employees', p),
+      editing ? api.put(`/api/employees/${editing.id}`, p) : api.post('/api/employees', p),
     onSuccess: () => {
       toast.success(editing ? 'Karyawan diupdate' : 'Karyawan dibuat');
       qc.invalidateQueries({ queryKey: ['employees'] });
@@ -55,7 +55,7 @@ export function EmployeesPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/employees/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/employees/${id}`),
     onSuccess: () => {
       toast.success('Karyawan dihapus');
       qc.invalidateQueries({ queryKey: ['employees'] });

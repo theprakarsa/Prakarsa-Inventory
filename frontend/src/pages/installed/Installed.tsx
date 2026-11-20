@@ -33,15 +33,15 @@ export function InstalledPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['installed', page],
-    queryFn: async () => (await api.get('/installed', { params: { page, limit: 10 } })).data,
+    queryFn: async () => (await api.get('/api/installed', { params: { page, limit: 10 } })).data,
   });
   const { data: assets } = useQuery({
     queryKey: ['assets-tersedia'],
-    queryFn: async () => (await api.get('/assets', { params: { limit: 500, status: 'tersedia' } })).data.data,
+    queryFn: async () => (await api.get('/api/assets', { params: { limit: 500, status: 'tersedia' } })).data.data,
   });
   const { data: locations } = useQuery({
     queryKey: ['locations-all'],
-    queryFn: async () => (await api.get('/locations', { params: { limit: 200 } })).data.data,
+    queryFn: async () => (await api.get('/api/locations', { params: { limit: 200 } })).data.data,
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -49,7 +49,7 @@ export function InstalledPage() {
   });
 
   const createMut = useMutation({
-    mutationFn: (p: FormData) => api.post('/installed', p),
+    mutationFn: (p: FormData) => api.post('/api/installed', p),
     onSuccess: () => {
       toast.success('Asset terpasang dicatat');
       qc.invalidateQueries({ queryKey: ['installed'] });

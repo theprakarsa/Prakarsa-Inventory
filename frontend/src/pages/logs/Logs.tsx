@@ -15,7 +15,7 @@ export function LogsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['logs', page, module, action],
     queryFn: async () =>
-      (await api.get('/activity-logs', { params: { page, limit: 20, module, action } })).data,
+      (await api.get('/api/activity-logs', { params: { page, limit: 20, module, action } })).data,
   });
 
   const meta = data?.meta;

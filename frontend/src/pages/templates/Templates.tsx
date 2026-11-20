@@ -19,7 +19,7 @@ export function TemplatesPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['templates'],
-    queryFn: async () => (await api.get('/templates', { params: { limit: 100 } })).data.data as any[],
+    queryFn: async () => (await api.get('/api/templates', { params: { limit: 100 } })).data.data as any[],
   });
 
   const createMut = useMutation({
@@ -28,7 +28,7 @@ export function TemplatesPage() {
       const fd = new FormData();
       fd.append('file', file);
       fd.append('name', name);
-      return api.post('/templates', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      return api.post('/api/templates', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     },
     onSuccess: () => {
       toast.success('Template diupload');
@@ -42,7 +42,7 @@ export function TemplatesPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/templates/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/templates/${id}`),
     onSuccess: () => {
       toast.success('Template dihapus');
       qc.invalidateQueries({ queryKey: ['templates'] });
@@ -52,7 +52,7 @@ export function TemplatesPage() {
   });
 
   const setDefaultMut = useMutation({
-    mutationFn: (id: number) => api.put(`/templates/${id}`, { isDefault: true }),
+    mutationFn: (id: number) => api.put(`/api/templates/${id}`, { isDefault: true }),
     onSuccess: () => {
       toast.success('Template default diset');
       qc.invalidateQueries({ queryKey: ['templates'] });
@@ -63,7 +63,7 @@ export function TemplatesPage() {
 
   function download(id: number) {
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/templates/${id}/download?token=${token}`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL}/api/templates/${id}/download?token=${token}`, '_blank');
   }
 
   const rows = data ?? [];

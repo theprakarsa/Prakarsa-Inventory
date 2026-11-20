@@ -30,7 +30,7 @@ export function CategoriesPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: async () =>
-      (await api.get('/categories', { params: { limit: 200 } })).data.data as any[],
+      (await api.get('/api/categories', { params: { limit: 200 } })).data.data as any[],
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -40,7 +40,7 @@ export function CategoriesPage() {
 
   const saveMut = useMutation({
     mutationFn: (p: FormData) =>
-      editing ? api.put(`/categories/${editing.id}`, p) : api.post('/categories', p),
+      editing ? api.put(`/api/categories/${editing.id}`, p) : api.post('/api/categories', p),
     onSuccess: () => {
       toast.success(editing ? 'Kategori diupdate' : 'Kategori dibuat');
       qc.invalidateQueries({ queryKey: ['categories'] });
@@ -53,7 +53,7 @@ export function CategoriesPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/categories/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/categories/${id}`),
     onSuccess: () => {
       toast.success('Kategori dihapus');
       qc.invalidateQueries({ queryKey: ['categories'] });

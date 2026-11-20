@@ -43,17 +43,17 @@ export function LoansPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['loans', page, status],
-    queryFn: async () => (await api.get('/loans', { params: { page, limit: 10, status } })).data,
+    queryFn: async () => (await api.get('/api/loans', { params: { page, limit: 10, status } })).data,
   });
 
   const { data: availableAssets } = useQuery({
     queryKey: ['assets-tersedia'],
-    queryFn: async () => (await api.get('/assets', { params: { limit: 500, status: 'tersedia' } })).data.data,
+    queryFn: async () => (await api.get('/api/assets', { params: { limit: 500, status: 'tersedia' } })).data.data,
   });
 
   const { data: templates } = useQuery({
     queryKey: ['templates-all'],
-    queryFn: async () => (await api.get('/templates', { params: { limit: 100 } })).data.data,
+    queryFn: async () => (await api.get('/api/templates', { params: { limit: 100 } })).data.data,
   });
 
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<FormData>({
@@ -61,7 +61,7 @@ export function LoansPage() {
   });
 
   const createMut = useMutation({
-    mutationFn: (p: FormData) => api.post('/loans', { ...p, assetIds: selectedAssets }),
+    mutationFn: (p: FormData) => api.post('/api/loans', { ...p, assetIds: selectedAssets }),
     onSuccess: () => {
       toast.success('Peminjaman dibuat');
       qc.invalidateQueries({ queryKey: ['loans'] });
@@ -86,7 +86,7 @@ export function LoansPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/loans/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/loans/${id}`),
     onSuccess: () => {
       toast.success('Peminjaman dihapus');
       qc.invalidateQueries({ queryKey: ['loans'] });
@@ -99,7 +99,7 @@ export function LoansPage() {
     mutationFn: async ({ id, file }: { id: number; file: File }) => {
       const fd = new FormData();
       fd.append('file', file);
-      return api.post(`/loans/${id}/attachments`, fd, {
+      return api.post(`/api/loans/${id}/attachments`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     },
@@ -140,7 +140,7 @@ export function LoansPage() {
     }
 
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/templates/${idToDownload}/download?token=${token}`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL}/api/templates/${idToDownload}/download?token=${token}`, '_blank');
   }
 
   // Logika untuk memfilter barang berdasarkan ketikan pengguna

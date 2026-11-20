@@ -32,7 +32,7 @@ export function LocationsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['locations'],
     queryFn: async () =>
-      (await api.get('/locations', { params: { limit: 200 } })).data.data as any[],
+      (await api.get('/api/locations', { params: { limit: 200 } })).data.data as any[],
   });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
@@ -42,7 +42,7 @@ export function LocationsPage() {
 
   const saveMut = useMutation({
     mutationFn: (p: FormData) =>
-      editing ? api.put(`/locations/${editing.id}`, p) : api.post('/locations', p),
+      editing ? api.put(`/api/locations/${editing.id}`, p) : api.post('/api/locations', p),
     onSuccess: () => {
       toast.success(editing ? 'Lokasi diupdate' : 'Lokasi dibuat');
       qc.invalidateQueries({ queryKey: ['locations'] });
@@ -55,7 +55,7 @@ export function LocationsPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/locations/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/locations/${id}`),
     onSuccess: () => {
       toast.success('Lokasi dihapus');
       qc.invalidateQueries({ queryKey: ['locations'] });

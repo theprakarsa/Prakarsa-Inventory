@@ -46,7 +46,7 @@ export function AssetsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['assets', page, search, status, ownership],
     queryFn: async () => {
-      const res = await api.get('/assets', {
+      const res = await api.get('/api/assets', {
         params: { page, limit: 10, search, status, ownership },
       });
       return res.data as {
@@ -58,11 +58,11 @@ export function AssetsPage() {
 
   const { data: divisions } = useQuery({
     queryKey: ['divisions-all'],
-    queryFn: async () => (await api.get('/divisions', { params: { limit: 200 } })).data.data,
+    queryFn: async () => (await api.get('/api/divisions', { params: { limit: 200 } })).data.data,
   });
   const { data: categories } = useQuery({
     queryKey: ['categories-all'],
-    queryFn: async () => (await api.get('/categories', { params: { limit: 200 } })).data.data,
+    queryFn: async () => (await api.get('/api/categories', { params: { limit: 200 } })).data.data,
   });
 
   const {
@@ -73,7 +73,7 @@ export function AssetsPage() {
   } = useForm<CreateForm>({ resolver: zodResolver(createSchema), defaultValues: { quantity: 1 } });
 
   const createMut = useMutation({
-    mutationFn: (payload: CreateForm) => api.post('/assets', payload),
+    mutationFn: (payload: CreateForm) => api.post('/api/assets', payload),
     onSuccess: () => {
       toast.success('Asset berhasil dibuat');
       qc.invalidateQueries({ queryKey: ['assets'] });
@@ -85,7 +85,7 @@ export function AssetsPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: number) => api.delete(`/assets/${id}`),
+    mutationFn: (id: number) => api.delete(`/api/assets/${id}`),
     onSuccess: () => {
       toast.success('Asset dihapus');
       qc.invalidateQueries({ queryKey: ['assets'] });
@@ -96,7 +96,7 @@ export function AssetsPage() {
   function printLabel(assetId: number) {
     const token = localStorage.getItem('token');
     window.open(
-      `${import.meta.env.VITE_API_URL}/assets/${assetId}/label?token=${token}`,
+      `${import.meta.env.VITE_API_URL}/api/assets/${assetId}/label?token=${token}`,
       '_blank'
     );
   }
