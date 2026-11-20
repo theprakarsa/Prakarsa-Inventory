@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://prakarsa-inventory-production-fcc6463b.up.railway.app/api';
+const baseURL = 'https://prakarsa-inventory-production-fcc6463b.up.railway.app';
 
 export const api = axios.create({
   baseURL: baseURL,
