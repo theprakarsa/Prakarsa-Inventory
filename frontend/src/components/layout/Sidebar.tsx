@@ -26,8 +26,8 @@ const menu = [
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { user } = useAuth();
-  const role = user?.role || 'staff';
-  const filtered = menu.filter((m) => m.roles.includes(role));
+  const role = (user?.role || 'staff').toLowerCase();
+  const filtered = menu.filter((m) => m.roles.includes(role) || role === 'administrator' || role === 'superadmin');
 
   return (
     <>
