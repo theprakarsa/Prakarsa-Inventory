@@ -6,8 +6,6 @@ import {
   FileText, UserCog, ClipboardList, BarChart3, LogOut 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// Pastikan path import logo ini sesuai dengan struktur folder Anda
-import logo from '@/assets/logo.png'; 
 
 const menu = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'staff', '1', '2'] },
@@ -42,9 +40,9 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col">
-      {/* BAGIAN LOGO DIKEMBALIKAN */}
-      <div className="p-6 border-b border-slate-200 flex justify-center">
-        <img src={logo} alt="Prakarsa Logo" className="h-16 object-contain" />
+      {/* LOGO DARI FOLDER PUBLIC */}
+      <div className="p-6 border-b border-slate-200 flex justify-center items-center">
+        <img src="/logo.png" alt="Prakarsa Logo" className="h-16 object-contain" />
       </div>
       
       <nav className="flex-1 p-4 space-y-1">
