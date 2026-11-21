@@ -63,7 +63,7 @@ export function TemplatesPage() {
 
   function download(id: number) {
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/api/templates/${id}/download?token=${token}`, '_blank');
+    window.open(`https://api.theprakarsa.org/api/templates/${id}/download?token=${token}`, '_blank');
   }
 
   const rows = data ?? [];
