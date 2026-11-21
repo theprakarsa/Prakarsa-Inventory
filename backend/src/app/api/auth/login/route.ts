@@ -7,8 +7,12 @@ const getCorsHeaders = (origin: string | null) => ({
   "Access-Control-Allow-Credentials": "true",
 });
 
+// Menangani Preflight Request dari browser
 export async function OPTIONS(req: Request) {
-  return new NextResponse(null, { status: 204, headers: getCorsHeaders(req.headers.get("origin")) });
+  return new NextResponse(null, { 
+    status: 204, 
+    headers: getCorsHeaders(req.headers.get("origin")) 
+  });
 }
 
 export async function POST(req: Request) {
@@ -16,7 +20,7 @@ export async function POST(req: Request) {
   
   try {
     // --- SILAKAN MASUKKAN LOGIKA LOGIN ANDA DI SINI ---
-    // (Kode di bawah ini hanya placeholder agar file tidak error)
+    // (Pastikan Anda tidak menghapus logika asli Anda yang ada di dalam blok try ini)
     const body = await req.json(); 
     
     const successRes = NextResponse.json({ message: "Login berhasil" }, { status: 200 });
