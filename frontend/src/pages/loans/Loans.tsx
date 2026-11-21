@@ -74,7 +74,7 @@ export function LoansPage() {
   });
 
   const returnMut = useMutation({
-    mutationFn: (id: number) => api.patch(`/loans/${id}/return`),
+    mutationFn: (id: number) => api.patch(`/api/loans/${id}/return`),
     onSuccess: () => {
       toast.success('Asset ditandai kembali');
       qc.invalidateQueries({ queryKey: ['loans'] });
