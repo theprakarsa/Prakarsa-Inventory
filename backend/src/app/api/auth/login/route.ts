@@ -33,10 +33,15 @@ export async function POST(req: Request) {
     }
 
     const userName = user.name || user.nama || user.username || "User";
-    const userRole = user.role || user.role_id || user.level || "staff";
+    
+    // NORMALISASI ROLE: Jika DB menyimpan angka 1, ubah jadi string 'admin'
+    let userRole = String(user.role || user.role_id || user.level || 'staff').toLowerCase();
+    if (userRole === '1' || userRole === 'administrator' || userRole === 'superadmin') {
+      userRole = 'admin';
+    }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: userRole }, 
+      { id: user.id, userId: user.id, email: user.email, role: userRole }, 
       process.env.JWT_SECRET || "rahasia_default", 
       { expiresIn: "1d" }
     );
@@ -48,7 +53,7 @@ export async function POST(req: Request) {
         id: user.id, 
         name: userName, 
         email: user.email,
-        role: userRole
+        role: userRole // Kirim 'admin' ke frontend
       }
     }, { status: 200 });
 
