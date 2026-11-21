@@ -9,13 +9,13 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Download, Star } from 'lucide-react';
+import { Plus, Trash2, ExternalLink } from 'lucide-react';
 
 export function TemplatesPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+  const [externalUrl, setExternalUrl] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['templates'],
@@ -24,19 +24,15 @@ export function TemplatesPage() {
 
   const createMut = useMutation({
     mutationFn: async () => {
-      if (!file || !name) throw new Error('Lengkapi form');
-      const fd = new FormData();
-      fd.append('file', file);
-      fd.append('name', name);
-      return api.post('/api/templates', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+      if (!name || !externalUrl) throw new Error('Lengkapi form');
+      return api.post('/api/templates', { name, externalUrl, isDefault: false });
     },
     onSuccess: () => {
-      toast.success('Template diupload');
+      toast.success('Link Template ditambahkan');
       qc.invalidateQueries({ queryKey: ['templates'] });
-      qc.invalidateQueries({ queryKey: ['templates-all'] });
       setOpen(false);
       setName('');
-      setFile(null);
+      setExternalUrl('');
     },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || e.message || 'Gagal'),
   });
@@ -46,22 +42,11 @@ export function TemplatesPage() {
     onSuccess: () => {
       toast.success('Template dihapus');
       qc.invalidateQueries({ queryKey: ['templates'] });
-      qc.invalidateQueries({ queryKey: ['templates-all'] });
     },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal'),
   });
 
-  const setDefaultMut = useMutation({
-    mutationFn: (id: number) => api.put(`/api/templates/${id}`, { isDefault: true }),
-    onSuccess: () => {
-      toast.success('Template default diset');
-      qc.invalidateQueries({ queryKey: ['templates'] });
-      qc.invalidateQueries({ queryKey: ['templates-all'] });
-    },
-    onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal'),
-  });
-
-  function download(id: number) {
+  function openLink(id: number) {
     const token = localStorage.getItem('token');
     window.open(`https://api.theprakarsa.org/api/templates/${id}/download?token=${token}`, '_blank');
   }
@@ -71,30 +56,27 @@ export function TemplatesPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Template Form</h1>
+        <h1 className="text-2xl font-semibold">Template Form (Link Eksternal)</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button><Plus size={16} className="mr-1" /> Upload</Button>
+            <Button><Plus size={16} className="mr-1" /> Tambah Link</Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>Upload Template</DialogTitle></DialogHeader>
-            <div className="space-y-3">
+            <DialogHeader><DialogTitle>Tambah Link Template</DialogTitle></DialogHeader>
+            <form onSubmit={(e) => { e.preventDefault(); createMut.mutate(); }} className="space-y-3">
               <div>
                 <Label>Nama Template</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Form Peminjaman Standar" />
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Form Peminjaman 2024" required />
               </div>
               <div>
-                <Label>File (jpg/png/pdf)</Label>
-                <Input type="file" accept=".jpg,.jpeg,.png,.pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
-                {file && <p className="text-xs text-gray-500 mt-1">{file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
+                <Label>Link OneDrive / Google Drive</Label>
+                <Input value={externalUrl} onChange={(e) => setExternalUrl(e.target.value)} placeholder="https://1drv.ms/..." required />
               </div>
               <DialogFooter>
                 <DialogClose asChild><Button type="button" variant="outline">Batal</Button></DialogClose>
-                <Button onClick={() => createMut.mutate()} disabled={createMut.isPending || !name || !file}>
-                  {createMut.isPending ? 'Uploading...' : 'Upload'}
-                </Button>
+                <Button type="submit" disabled={createMut.isPending}>Simpan Link</Button>
               </DialogFooter>
-            </div>
+            </form>
           </DialogContent>
         </Dialog>
       </div>
@@ -102,36 +84,24 @@ export function TemplatesPage() {
       <div className="bg-white rounded-lg border">
         <Table>
           <Thead>
-            <Tr><Th>Nama</Th><Th>File</Th><Th>Default</Th><Th>Aksi</Th></Tr>
+            <Tr><Th>Nama Template</Th><Th>Tipe</Th><Th className="text-right">Aksi</Th></Tr>
           </Thead>
           <Tbody>
-            {isLoading && <Tr><Td colSpan={4} className="text-center py-6">Loading...</Td></Tr>}
+            {isLoading && <Tr><Td colSpan={3} className="text-center py-6">Loading...</Td></Tr>}
             {!isLoading && rows.length === 0 && (
-              <Tr><Td colSpan={4} className="text-center py-6 text-gray-500">Belum ada template</Td></Tr>
+              <Tr><Td colSpan={3} className="text-center py-6 text-gray-500">Belum ada template</Td></Tr>
             )}
             {rows.map((t: any) => (
               <Tr key={t.id}>
-                <Td>
-                  <div className="flex items-center gap-2">
-                    {t.isDefault && <Star size={14} className="text-yellow-500 fill-yellow-500" />}
-                    {t.name}
-                  </div>
-                </Td>
-                <Td className="text-xs text-gray-600">{t.fileName}</Td>
-                <Td>
-                  {t.isDefault ? (
-                    <span className="text-xs text-green-700 font-medium">Ya</span>
-                  ) : (
-                    <Button size="sm" variant="outline" onClick={() => setDefaultMut.mutate(t.id)}>Set Default</Button>
-                  )}
-                </Td>
-                <Td>
-                  <div className="flex gap-1">
-                    <Button size="sm" variant="outline" onClick={() => download(t.id)}><Download size={12} /></Button>
-                    <Button size="sm" variant="destructive" onClick={() => {
-                      if (confirm('Hapus template ini?')) deleteMut.mutate(t.id);
-                    }}><Trash2 size={12} /></Button>
-                  </div>
+                <Td>{t.name}</Td>
+                <Td>Link Eksternal</Td>
+                <Td className="text-right space-x-2">
+                  <Button variant="outline" size="sm" onClick={() => openLink(t.id)}>
+                    <ExternalLink size={14} className="mr-1" /> Buka Link
+                  </Button>
+                  <Button variant="destructive" size="sm" onClick={() => { if(confirm('Hapus template ini?')) deleteMut.mutate(t.id) }}>
+                    <Trash2 size={14} />
+                  </Button>
                 </Td>
               </Tr>
             ))}
