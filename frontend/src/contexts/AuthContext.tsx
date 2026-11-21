@@ -1,4 +1,3 @@
-// Trigger Vercel Rebuild
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { api } from '@/lib/api-client';
 
@@ -6,7 +5,7 @@ export interface AuthUser {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'staff';
+  role: any; // Ubah ke any agar menerima angka (1) atau teks ('admin')
   employee?: { id: number; nik: string; name: string } | null;
 }
 
@@ -39,8 +38,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function login(email: string, password: string) {
     const { data } = await api.post("/api/auth/login", { email, password });
-    const token = data.token;
-    const user = data.user;
     localStorage.setItem('token', data.token);
     setUser(data.user);
   }
@@ -51,9 +48,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = '/login';
   }
 
+  // MENENTUKAN APAKAH USER ADALAH ADMIN
+  const role = String(user?.role || '').toLowerCase();
+  const isAdmin = role === 'admin' || role === '1' || role === 'administrator' || role === 'superadmin';
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, logout, isAdmin: user?.role === 'admin' }}
+      value={{ user, loading, login, logout, isAdmin }}
     >
       {children}
     </AuthContext.Provider>
@@ -61,4 +62,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export const useAuth = () => useContext(AuthContext);
-// force build 1795079641
