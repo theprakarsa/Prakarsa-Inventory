@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -30,7 +28,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401, headers: corsHeaders });
     }
 
-    // Verifikasi token
     jwt.verify(token, process.env.JWT_SECRET || 'rahasia_default');
     
     const id = Number(params.id);
@@ -40,25 +37,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Template tidak ditemukan' }, { status: 404, headers: corsHeaders });
     }
 
-    // Baca file fisik dari folder uploads
-    const filePath = path.join(process.cwd(), template.filePath);
-    
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ message: 'File fisik tidak ditemukan di server' }, { status: 404, headers: corsHeaders });
+    if (template.externalUrl) {
+      return NextResponse.redirect(template.externalUrl);
     }
 
-    const fileBuffer = fs.readFileSync(filePath);
-
-    const response = new NextResponse(fileBuffer, {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': template.mimeType,
-        'Content-Disposition': `attachment; filename="${template.fileName}"`,
-      },
-    });
-
-    return response;
+    return NextResponse.json({ message: 'Link template tidak tersedia' }, { status: 404, headers: corsHeaders });
 
   } catch (error: any) {
     return NextResponse.json({ message: 'Token tidak valid atau error server', error: error.message }, { status: 401, headers: corsHeaders });
