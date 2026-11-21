@@ -1,32 +1,66 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
-import fs from 'fs/promises';
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
 import path from 'path';
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { searchParams } = new URL(req.url);
-  const token = searchParams.get('token');
-  if (!token) return new Response('Token required', { status: 401 });
   try {
-    verifyToken(token);
-  } catch {
-    return new Response('Invalid token', { status: 401 });
-  }
+    const { searchParams } = new URL(req.url);
+    let token = searchParams.get('token');
+    
+    if (!token) {
+      const authHeader = req.headers.get('authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
+    }
 
-  const template = await prisma.formTemplate.findUnique({ where: { id: Number(params.id) } });
-  if (!template) return new Response('Template tidak ditemukan', { status: 404 });
+    if (!token) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401, headers: corsHeaders });
+    }
 
-  const filepath = path.join(process.env.UPLOAD_DIR || './uploads', template.filePath);
-  try {
-    const file = await fs.readFile(filepath);
-    return new Response(file, {
+    // Verifikasi token
+    jwt.verify(token, process.env.JWT_SECRET || 'rahasia_default');
+    
+    const id = Number(params.id);
+    const template = await prisma.formTemplate.findUnique({ where: { id } });
+
+    if (!template) {
+      return NextResponse.json({ message: 'Template tidak ditemukan' }, { status: 404, headers: corsHeaders });
+    }
+
+    // Baca file fisik dari folder uploads
+    const filePath = path.join(process.cwd(), template.filePath);
+    
+    if (!fs.existsSync(filePath)) {
+      return NextResponse.json({ message: 'File fisik tidak ditemukan di server' }, { status: 404, headers: corsHeaders });
+    }
+
+    const fileBuffer = fs.readFileSync(filePath);
+
+    const response = new NextResponse(fileBuffer, {
+      status: 200,
       headers: {
+        ...corsHeaders,
         'Content-Type': template.mimeType,
-        'Content-Disposition': `inline; filename="${template.fileName}"`,
+        'Content-Disposition': `attachment; filename="${template.fileName}"`,
       },
     });
-  } catch {
-    return new Response('File tidak ditemukan', { status: 404 });
+
+    return response;
+
+  } catch (error: any) {
+    return NextResponse.json({ message: 'Token tidak valid atau error server', error: error.message }, { status: 401, headers: corsHeaders });
   }
 }
