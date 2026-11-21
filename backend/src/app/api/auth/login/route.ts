@@ -3,33 +3,16 @@ import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Fungsi untuk membuat header CORS
-const getCorsHeaders = (origin: string | null) => ({
-  "Access-Control-Allow-Origin": origin || "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Credentials": "true",
-});
+export const dynamic = 'force-dynamic';
 
-// Menangani Preflight Request (OPTIONS)
-export async function OPTIONS(req: Request) {
-  return new NextResponse(null, { 
-    status: 204, 
-    headers: getCorsHeaders(req.headers.get("origin")) 
-  });
-}
-
-// Menangani Login (POST)
 export async function POST(req: Request) {
-  const corsHeaders = getCorsHeaders(req.headers.get("origin"));
   let db;
-  
   try {
     const body = await req.json();
     const { email, password } = body;
 
     if (!email || !password) {
-      return NextResponse.json({ message: "Email dan password wajib diisi" }, { status: 400, headers: corsHeaders });
+      return NextResponse.json({ message: "Email dan password wajib diisi" }, { status: 400 });
     }
 
     db = await mysql.createConnection({
@@ -41,12 +24,12 @@ export async function POST(req: Request) {
     const user = rows[0];
 
     if (!user) {
-      return NextResponse.json({ message: "Email atau password salah" }, { status: 401, headers: corsHeaders });
+      return NextResponse.json({ message: "Email atau password salah" }, { status: 401 });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return NextResponse.json({ message: "Email atau password salah" }, { status: 401, headers: corsHeaders });
+      return NextResponse.json({ message: "Email atau password salah" }, { status: 401 });
     }
 
     const userName = user.name || user.nama || user.username || "User";
@@ -67,11 +50,11 @@ export async function POST(req: Request) {
         email: user.email,
         role: userRole
       }
-    }, { status: 200, headers: corsHeaders });
+    }, { status: 200 });
 
   } catch (error: any) {
     console.error("DETAIL ERROR:", error);
-    return NextResponse.json({ message: "Terjadi kesalahan server", errorDetail: error.message }, { status: 500, headers: corsHeaders });
+    return NextResponse.json({ message: "Terjadi kesalahan server", errorDetail: error.message }, { status: 500 });
   } finally {
     if (db) await db.end();
   }
