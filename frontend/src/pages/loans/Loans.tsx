@@ -37,8 +37,6 @@ export function LoansPage() {
   const [open, setOpen] = useState(false);
   const [uploadFor, setUploadFor] = useState<any>(null);
   const [selectedAssets, setSelectedAssets] = useState<number[]>([]);
-  
-  // State untuk fitur pencarian barang di dalam form
   const [searchAsset, setSearchAsset] = useState('');
 
   const { data, isLoading } = useQuery({
@@ -70,7 +68,7 @@ export function LoansPage() {
       setOpen(false);
       reset();
       setSelectedAssets([]);
-      setSearchAsset(''); // Reset pencarian saat form ditutup
+      setSearchAsset('');
     },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal'),
   });
@@ -140,10 +138,9 @@ export function LoansPage() {
     }
 
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/api/templates/${idToDownload}/download?token=${token}`, '_blank');
+    window.open(`https://api.theprakarsa.org/api/templates/${idToDownload}/download?token=${token}`, '_blank');
   }
 
-  // Logika untuk memfilter barang berdasarkan ketikan pengguna
   const filteredAssets = availableAssets?.filter((a: any) => {
     const keyword = searchAsset.toLowerCase();
     return (
@@ -172,7 +169,13 @@ export function LoansPage() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader><DialogTitle>Buat Peminjaman</DialogTitle></DialogHeader>
-            <form onSubmit={handleSubmit((d) => createMut.mutate(d))} className="space-y-3">
+            <form onSubmit={handleSubmit((d) => {
+              if (selectedAssets.length === 0) {
+                toast.error('Pilih minimal 1 asset sebelum menyimpan');
+                return;
+              }
+              createMut.mutate(d);
+            })} className="space-y-3">
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <Label>Nama Peminjam</Label>
@@ -213,7 +216,6 @@ export function LoansPage() {
 
               <div>
                 <Label>Pilih Asset (multi)</Label>
-                {/* KOLOM PENCARIAN BARANG */}
                 <div className="mb-2 relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
                     <Search size={14} />
@@ -249,64 +251,54 @@ export function LoansPage() {
                   <p className="text-xs text-red-600 mt-1">Pilih minimal 1 asset</p>
                 )}
               </div>
-              <div>
-                <Label>Catatan</Label>
-                <Input {...register('note')} />
-              </div>
+
               <DialogFooter>
                 <DialogClose asChild><Button type="button" variant="outline">Batal</Button></DialogClose>
-                <Button type="submit" disabled={createMut.isPending || selectedAssets.length === 0}>Simpan</Button>
+                <Button type="submit" disabled={createMut.isPending}>Simpan</Button>
               </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="mb-3">
-        <Select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className="max-w-[180px]">
-          <option value="">Semua status</option>
-          <option value="aktif">Aktif</option>
-          <option value="selesai">Selesai</option>
-        </Select>
-      </div>
-
       <div className="bg-white rounded-lg border">
         <Table>
           <Thead>
-            <Tr><Th>Kode</Th><Th>Peminjam</Th><Th>Tgl Pinjam</Th><Th>Items</Th><Th>Status</Th><Th>Aksi</Th></Tr>
+            <Tr><Th>Kode</Th><Th>Peminjam</Th><Th>Tgl Pinjam</Th><Th>Jatuh Tempo</Th><Th>Status</Th><Th>Assets</Th><Th>Aksi</Th></Tr>
           </Thead>
           <Tbody>
-            {isLoading && <Tr><Td colSpan={6} className="text-center py-6">Loading...</Td></Tr>}
+            {isLoading && <Tr><Td colSpan={7} className="text-center py-6">Loading...</Td></Tr>}
             {!isLoading && rows.length === 0 && (
-              <Tr><Td colSpan={6} className="text-center py-6 text-gray-500">Belum ada peminjaman</Td></Tr>
+              <Tr><Td colSpan={7} className="text-center py-6 text-gray-500">Belum ada data</Td></Tr>
             )}
             {rows.map((l: any) => (
               <Tr key={l.id}>
                 <Td className="font-mono text-xs">{l.code}</Td>
-                <Td>
-                  {l.borrowerName}
-                  <br />
-                  <span className="text-xs text-gray-500">{l.borrowerNik}</span>
-                </Td>
+                <Td>{l.borrowerName}<br/><span className="text-xs text-gray-500">{l.borrowerNik}</span></Td>
                 <Td>{formatDate(l.loanDate)}</Td>
-                <Td>{l.items?.length ?? 0} item</Td>
+                <Td>{l.dueDate ? formatDate(l.dueDate) : '-'}</Td>
                 <Td><Badge value={l.status} /></Td>
                 <Td>
-                  <div className="flex gap-1 flex-wrap">
-                    <Button size="sm" variant="outline" onClick={() => setUploadFor(l)} title="Upload TTD">
-                      <Upload size={12} />
+                  <ul className="list-disc list-inside text-xs">
+                    {l.items?.map((item: any) => (
+                      <li key={item.id}>{item.asset.name}</li>
+                    ))}
+                  </ul>
+                </Td>
+                <Td className="space-x-1">
+                  {l.status === 'aktif' && (
+                    <Button variant="outline" size="sm" onClick={() => returnMut.mutate(l.id)} title="Kembalikan">
+                      <RotateCcw size={14} />
                     </Button>
-                    {l.status === 'aktif' && (
-                      <Button size="sm" variant="default" onClick={() => returnMut.mutate(l.id)} title="Tandai kembali">
-                        <RotateCcw size={12} />
-                      </Button>
-                    )}
-                    {isAdmin && (
-                      <Button size="sm" variant="destructive" onClick={() => {
-                        if (confirm('Hapus peminjaman?')) deleteMut.mutate(l.id);
-                      }}><Trash2 size={12} /></Button>
-                    )}
-                  </div>
+                  )}
+                  <Button variant="outline" size="sm" onClick={() => setUploadFor(l)} title="Upload TTD">
+                    <Upload size={14} />
+                  </Button>
+                  {isAdmin && (
+                    <Button variant="destructive" size="sm" onClick={() => { if(confirm('Hapus peminjaman?')) deleteMut.mutate(l.id) }} title="Hapus">
+                      <Trash2 size={14} />
+                    </Button>
+                  )}
                 </Td>
               </Tr>
             ))}
@@ -315,19 +307,19 @@ export function LoansPage() {
       </div>
 
       {meta && <Pagination page={meta.page} totalPages={meta.totalPages} total={meta.total} onChange={setPage} />}
-
-      <Dialog open={!!uploadFor} onOpenChange={(v) => !v && setUploadFor(null)}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Upload Form TTD — {uploadFor?.code}</DialogTitle></DialogHeader>
-          <div className="space-y-3">
-            <Label>File (jpg/png/pdf, max 10MB)</Label>
-            <Input type="file" accept=".jpg,.jpeg,.png,.pdf" onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f && uploadFor) uploadMut.mutate({ id: uploadFor.id, file: f });
+      
+      {/* Modal Upload Attachment */}
+      {uploadFor && (
+        <Dialog open={!!uploadFor} onOpenChange={() => setUploadFor(null)}>
+          <DialogContent>
+            <DialogHeader><DialogTitle>Upload Form TTD</DialogTitle></DialogHeader>
+            <input type="file" onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) uploadMut.mutate({ id: uploadFor.id, file });
             }} />
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
