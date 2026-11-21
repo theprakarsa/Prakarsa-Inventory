@@ -6,6 +6,8 @@ import {
   FileText, UserCog, ClipboardList, BarChart3, LogOut 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// Pastikan path import logo ini sesuai dengan struktur folder Anda
+import logo from '@/assets/logo.png'; 
 
 const menu = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'staff', '1', '2'] },
@@ -27,10 +29,8 @@ const menu = [
 export function Sidebar() {
   const { user, logout } = useAuth();
   
-  // Paksa role menjadi string agar aman jika dari database berupa angka (1)
   const role = String(user?.role || 'staff').toLowerCase();
   
-  // Filter menu: Jika role adalah '1' (angka dari DB), anggap sebagai admin
   const isAdmin = role === 'admin' || role === '1' || role === 'administrator' || role === 'superadmin';
   const isStaff = role === 'staff' || role === '2';
 
@@ -42,9 +42,11 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col">
-      <div className="p-6 border-b border-slate-200">
-        <h1 className="text-xl font-bold text-slate-800">PRAKARSA</h1>
+      {/* BAGIAN LOGO DIKEMBALIKAN */}
+      <div className="p-6 border-b border-slate-200 flex justify-center">
+        <img src={logo} alt="Prakarsa Logo" className="h-16 object-contain" />
       </div>
+      
       <nav className="flex-1 p-4 space-y-1">
         {filtered.map((item) => (
           <NavLink
