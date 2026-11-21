@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { 
   LayoutDashboard, Package, Building2, Tag, Users2, MapPin, 
   ShoppingCart, ArrowLeftRight, AlertTriangle, Wrench, 
-  FileText, UserCog, ClipboardList, BarChart3, LogOut 
+  FileText, UserCog, ClipboardList, BarChart3, LogOut, X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,11 +24,15 @@ const menu = [
   { to: '/reports', label: 'Laporan', icon: BarChart3, roles: ['admin', 'staff', '1', '2'] },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   
   const role = String(user?.role || 'staff').toLowerCase();
-  
   const isAdmin = role === 'admin' || role === '1' || role === 'administrator' || role === 'superadmin';
   const isStaff = role === 'staff' || role === '2';
 
@@ -39,40 +43,57 @@ export function Sidebar() {
   });
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col">
-      {/* LOGO DARI FOLDER PUBLIC */}
-      <div className="p-6 border-b border-slate-200 flex justify-center items-center">
-        <img src="/logo.png" alt="Prakarsa Logo" className="h-16 object-contain" />
-      </div>
-      
-      <nav className="flex-1 p-4 space-y-1">
-        {filtered.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                isActive 
-                  ? "bg-blue-50 text-blue-700" 
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-              )
-            }
+    <>
+      {/* Overlay untuk HP saat sidebar terbuka */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden" 
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="p-4 border-b border-slate-200 flex justify-between items-center md:justify-center">
+          <img src="/logo.png" alt="Prakarsa Logo" className="h-12 object-contain" />
+          <button onClick={onClose} className="md:hidden p-1 text-gray-500">
+            <X size={20} />
+          </button>
+        </div>
+        
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {filtered.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={onClose} // Tutup sidebar di HP saat menu diklik
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  isActive 
+                    ? "bg-blue-50 text-blue-700" 
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                )
+              }
+            >
+              <item.icon className="w-4 h-4" />
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+        
+        <div className="p-4 border-t border-slate-200">
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
           >
-            <item.icon className="w-4 h-4" />
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
-      <div className="p-4 border-t border-slate-200">
-        <button
-          onClick={logout}
-          className="flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
-      </div>
-    </aside>
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
