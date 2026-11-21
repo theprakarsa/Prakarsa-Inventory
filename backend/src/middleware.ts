@@ -2,30 +2,28 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // 1. Tangani Preflight (OPTIONS) langsung di sini
+  // Menangani Preflight Request (OPTIONS)
   if (request.method === 'OPTIONS') {
     return new NextResponse(null, {
-      status: 200,
+      status: 204,
       headers: {
-        'Access-Control-Allow-Origin': 'https://prakarsa-inventory.vercel.app',
+        'Access-Control-Allow-Origin': '*', // Mengizinkan semua domain
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Credentials': 'true',
       },
     })
   }
 
-  // 2. Teruskan request biasa, tapi sisipkan header CORS
+  // Menangani request biasa (POST, GET, dll)
   const response = NextResponse.next()
-  response.headers.set('Access-Control-Allow-Origin', 'https://prakarsa-inventory.vercel.app')
+  response.headers.set('Access-Control-Allow-Origin', '*')
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  response.headers.set('Access-Control-Allow-Credentials', 'true')
-
+  
   return response
 }
 
-// 3. Hanya jalankan untuk rute API
+// Terapkan middleware ke semua route API
 export const config = {
   matcher: '/api/:path*',
 }
