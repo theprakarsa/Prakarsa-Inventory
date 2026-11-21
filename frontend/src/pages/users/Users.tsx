@@ -67,7 +67,7 @@ export function UsersPage() {
   });
 
   const toggleMut = useMutation({
-    mutationFn: (id: number) => api.patch(`/users/${id}/toggle-active`),
+    mutationFn: (id: number) => api.patch(`/api/users/${id}/toggle-active`),
     onSuccess: () => {
       toast.success('Status user diubah');
       qc.invalidateQueries({ queryKey: ['users'] });
