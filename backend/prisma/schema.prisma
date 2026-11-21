@@ -238,10 +238,9 @@ model LoanItem {
 model LoanAttachment {
   id        Int      @id @default(autoincrement())
   loanId    Int      @map("loan_id")
-  filePath    String?  @map("file_path") @db.VarChar(255)
-  fileName    String?  @map("file_name") @db.VarChar(255)
-  mimeType    String?  @map("mime_type") @db.VarChar(100)
-  externalUrl String?  @map("external_url") @db.VarChar(500)
+  filePath  String   @map("file_path") @db.VarChar(255)
+  fileName  String   @map("file_name") @db.VarChar(255)
+  mimeType  String   @map("mime_type") @db.VarChar(100)
   fileSize  Int      @map("file_size")
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -297,14 +296,15 @@ model InstalledAsset {
 
 // ============ FORM TEMPLATES ============
 model FormTemplate {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(150)
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(150)
   filePath    String?  @map("file_path") @db.VarChar(255)
   fileName    String?  @map("file_name") @db.VarChar(255)
   mimeType    String?  @map("mime_type") @db.VarChar(100)
-  isDefault Boolean  @default(false) @map("is_default")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  externalUrl String?  @map("external_url") @db.VarChar(500)
+  isDefault   Boolean  @default(false) @map("is_default")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   loans Loan[]
 
