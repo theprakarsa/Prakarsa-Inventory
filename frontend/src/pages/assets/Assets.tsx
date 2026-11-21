@@ -96,7 +96,7 @@ export function AssetsPage() {
   function printLabel(assetId: number) {
     const token = localStorage.getItem('token');
     window.open(
-      `${import.meta.env.VITE_API_URL}/api/assets/${assetId}/label?token=${token}`,
+      `https://api.theprakarsa.org/api/assets/${assetId}/label?token=${token}`,
       '_blank'
     );
   }

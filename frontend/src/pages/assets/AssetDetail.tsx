@@ -37,7 +37,7 @@ export function AssetDetailPage() {
 
   function printLabel() {
     const token = localStorage.getItem('token');
-    window.open(`${import.meta.env.VITE_API_URL}/api/assets/${id}/label?token=${token}`, '_blank');
+    window.open(`https://api.theprakarsa.org/api/assets/${id}/label?token=${token}`, '_blank');
   }
 
   return (
