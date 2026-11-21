@@ -1,29 +1,27 @@
 import { NextRequest } from 'next/server';
+import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/middlewares/auth';
 import { requireRole } from '@/middlewares/role';
 import { success, paginated, error } from '@/lib/response';
-import { saveUpload } from '@/lib/upload';
+import { validateBody } from '@/lib/validate';
 import { logActivity } from '@/lib/activity-log';
+
+const createSchema = z.object({
+  name: z.string().min(1),
+  externalUrl: z.string().url('Format URL tidak valid'),
+  isDefault: z.boolean().optional(),
+});
 
 export async function GET(req: NextRequest) {
   const auth = requireAuth(req);
   if (!auth.ok) return auth.response;
 
-  const { searchParams } = new URL(req.url);
-  const page = Math.max(1, Number(searchParams.get('page') || 1));
-  const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit') || 50)));
+  const data = await prisma.formTemplate.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
 
-  const [data, total] = await Promise.all([
-    prisma.formTemplate.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.formTemplate.count(),
-  ]);
-
-  return paginated(data, page, limit, total);
+  return success(data);
 }
 
 export async function POST(req: NextRequest) {
@@ -32,42 +30,25 @@ export async function POST(req: NextRequest) {
   const role = requireRole(auth.user, ['admin']);
   if (!role.ok) return role.response;
 
-  const formData = await req.formData();
-  const file = formData.get('file') as File | null;
-  const name = (formData.get('name') as string) || '';
-  const isDefault = formData.get('isDefault') === 'true';
+  const v = await validateBody(req, createSchema);
+  if (!v.ok) return v.response;
 
-  if (!file) return error('NO_FILE', 'File tidak ditemukan', 400);
-  if (!name) return error('NO_NAME', 'Nama template wajib', 400);
+  const template = await prisma.formTemplate.create({
+    data: {
+      name: v.data.name,
+      externalUrl: v.data.externalUrl,
+      isDefault: v.data.isDefault || false,
+    },
+  });
 
-  try {
-    const uploaded = await saveUpload(file, 'templates');
+  await logActivity({
+    userId: auth.user.userId,
+    action: 'create',
+    module: 'templates',
+    referenceId: template.id,
+    description: `Tambah template link: ${v.data.name}`,
+    req,
+  });
 
-    if (isDefault) {
-      await prisma.formTemplate.updateMany({ data: { isDefault: false } });
-    }
-
-    const template = await prisma.formTemplate.create({
-      data: {
-        name,
-        filePath: uploaded.filePath,
-        fileName: uploaded.fileName,
-        mimeType: uploaded.mimeType,
-        isDefault,
-      },
-    });
-
-    await logActivity({
-      userId: auth.user.userId,
-      action: 'create',
-      module: 'templates',
-      referenceId: template.id,
-      description: `Upload template ${name}`,
-      req,
-    });
-
-    return success(template, 'Template diupload');
-  } catch (e: any) {
-    return error('UPLOAD_FAILED', e.message || 'Gagal upload', 400);
-  }
+  return success(template, 'Template berhasil ditambahkan');
 }
