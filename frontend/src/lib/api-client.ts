@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Hardcode URL Railway, pastikan ada /api
-const baseURL = 'https://prakarsa-inventory-production-fcc6463b.up.railway.app';
+const baseURL = 'https://api.theprakarsa.org';
 
 export const api = axios.create({
   baseURL: baseURL,
