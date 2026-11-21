@@ -16,10 +16,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2, Edit2 } from 'lucide-react';
 
 const schema = z.object({
-  assetId: z.coerce.number().int().positive('Pilih asset'),
+  assetId: z.coerce.number().int().positive('Pilih asset').optional(),
   source: z.enum(['purchase', 'grant']),
   purchaseDate: z.string().min(1, 'Tanggal wajib'),
   warrantyUntil: z.string().optional(),
@@ -33,6 +33,7 @@ export function PurchasesPage() {
   const qc = useQueryClient();
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['purchases', page],
@@ -43,7 +44,7 @@ export function PurchasesPage() {
     queryFn: async () => (await api.get('/api/assets', { params: { limit: 500 } })).data.data,
   });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -58,6 +59,53 @@ export function PurchasesPage() {
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal'),
   });
 
+  const updateMut = useMutation({
+    mutationFn: (p: FormData) => api.put(`/api/purchases/${editId}`, p),
+    onSuccess: () => {
+      toast.success('Data diperbarui');
+      qc.invalidateQueries({ queryKey: ['purchases'] });
+      setOpen(false);
+      reset();
+      setEditId(null);
+    },
+    onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal update'),
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: (id: number) => api.delete(`/api/purchases/${id}`),
+    onSuccess: () => {
+      toast.success('Data dihapus');
+      qc.invalidateQueries({ queryKey: ['purchases'] });
+    },
+    onError: (e: any) => toast.error(e.response?.data?.error?.message || 'Gagal hapus'),
+  });
+
+  const handleEdit = (p: any) => {
+    setEditId(p.id);
+    setValue('assetId', p.asset?.id);
+    setValue('source', p.source);
+    setValue('purchaseDate', new Date(p.purchaseDate).toISOString().split('T')[0]);
+    if (p.warrantyUntil) setValue('warrantyUntil', new Date(p.warrantyUntil).toISOString().split('T')[0]);
+    setValue('price', Number(p.price));
+    setValue('budgetProject', p.budgetProject || '');
+    setValue('note', p.note || '');
+    setOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    if (confirm('Yakin ingin menghapus data pembelian ini?')) {
+      deleteMut.mutate(id);
+    }
+  };
+
+  const onSubmit = (d: FormData) => {
+    if (editId) {
+      updateMut.mutate(d);
+    } else {
+      createMut.mutate(d);
+    }
+  };
+
   const meta = data?.meta;
   const rows = data?.data ?? [];
 
@@ -65,23 +113,27 @@ export function PurchasesPage() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Pembelian / Hibah</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(val) => { setOpen(val); if(!val) { reset(); setEditId(null); } }}>
           <DialogTrigger asChild>
-            <Button><Plus size={16} className="mr-1" /> Catat Perolehan</Button>
+            <Button onClick={() => { reset(); setEditId(null); }}>
+              <Plus size={16} className="mr-1" /> Catat Perolehan
+            </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>Catat Perolehan</DialogTitle></DialogHeader>
-            <form onSubmit={handleSubmit((d) => createMut.mutate(d))} className="space-y-3">
-              <div>
-                <Label>Asset</Label>
-                <Select {...register('assetId')}>
-                  <option value="">Pilih asset</option>
-                  {assets?.map((a: any) => (
-                    <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
-                  ))}
-                </Select>
-                {errors.assetId && <p className="text-xs text-red-600">{errors.assetId.message}</p>}
-              </div>
+            <DialogHeader><DialogTitle>{editId ? 'Edit Perolehan' : 'Catat Perolehan'}</DialogTitle></DialogHeader>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              {!editId && (
+                <div>
+                  <Label>Asset</Label>
+                  <Select {...register('assetId')}>
+                    <option value="">Pilih asset</option>
+                    {assets?.map((a: any) => (
+                      <option key={a.id} value={a.id}>{a.code} — {a.name}</option>
+                    ))}
+                  </Select>
+                  {errors.assetId && <p className="text-xs text-red-600">{errors.assetId.message}</p>}
+                </div>
+              )}
               <div>
                 <Label>Sumber</Label>
                 <Select {...register('source')}>
@@ -115,7 +167,9 @@ export function PurchasesPage() {
               </div>
               <DialogFooter>
                 <DialogClose asChild><Button type="button" variant="outline">Batal</Button></DialogClose>
-                <Button type="submit" disabled={createMut.isPending}>Simpan</Button>
+                <Button type="submit" disabled={createMut.isPending || updateMut.isPending}>
+                  {editId ? 'Simpan Perubahan' : 'Simpan'}
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>
@@ -125,12 +179,15 @@ export function PurchasesPage() {
       <div className="bg-white rounded-lg border">
         <Table>
           <Thead>
-            <Tr><Th>Asset</Th><Th>Sumber</Th><Th>Tgl Beli</Th><Th>Harga</Th><Th>Garansi</Th><Th>Budget</Th></Tr>
+            <Tr>
+              <Th>Asset</Th><Th>Sumber</Th><Th>Tgl Beli</Th><Th>Harga</Th>
+              <Th>Garansi</Th><Th>Budget</Th><Th className="text-right">Aksi</Th>
+            </Tr>
           </Thead>
           <Tbody>
-            {isLoading && <Tr><Td colSpan={6} className="text-center py-6">Loading...</Td></Tr>}
+            {isLoading && <Tr><Td colSpan={7} className="text-center py-6">Loading...</Td></Tr>}
             {!isLoading && rows.length === 0 && (
-              <Tr><Td colSpan={6} className="text-center py-6 text-gray-500">Belum ada data</Td></Tr>
+              <Tr><Td colSpan={7} className="text-center py-6 text-gray-500">Belum ada data</Td></Tr>
             )}
             {rows.map((p: any) => (
               <Tr key={p.id}>
@@ -144,6 +201,14 @@ export function PurchasesPage() {
                 <Td>{formatCurrency(p.price)}</Td>
                 <Td>{p.warrantyUntil ? formatDate(p.warrantyUntil) : '-'}</Td>
                 <Td>{p.budgetProject ?? '-'}</Td>
+                <Td className="text-right space-x-2">
+                  <Button variant="outline" size="sm" onClick={() => handleEdit(p)}>
+                    <Edit2 size={14} />
+                  </Button>
+                  <Button variant="destructive" size="sm" onClick={() => handleDelete(p.id)}>
+                    <Trash2 size={14} />
+                  </Button>
+                </Td>
               </Tr>
             ))}
           </Tbody>
